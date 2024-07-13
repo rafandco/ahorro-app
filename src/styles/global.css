@@ -12,10 +12,28 @@
   --poppy-light: #dd404bff;
 
   --white: white;
-  --gray-light: #e6e6e6;
-  --gray-medium: #808080;
-  --gray-dark: #1a1a1a;
+  --gray-ultra-light: #fafafa;
+  --gray-light: #f2f2f2;
+  --gray-medium: #e6e6e6;
+  --gray-dark: #808080;
+  --gray-ultra-dark: #1a1a1a;
   --black: black;
+
+  --rounded-sm: 8px;
+  --rounded: 16px;
+
+  --gap-small: 8px;
+  --gap: 16px;
+  --gap-large: 32px;
+  --gap-xlarge: 64px;
+
+  --padding-small: 8px;
+  --padding: 16px;
+  --padding-large: 32px;
+
+  --margin-small: 8px;
+  --margin: 16px;
+  --margin-large: 32px;
 }
 
 @font-face {
