@@ -51,3 +51,66 @@
 body {
   font-family: "Inter Variable", sans-serif;
 }
+
+h1,
+.h1 {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.25em;
+  letter-spacing: 0.05em;
+  margin: 0px;
+}
+
+h2,
+.h2 {
+  font-size: 32px;
+  font-weight: 550;
+  line-height: 1.25em;
+  letter-spacing: 0.05em;
+  margin: 0px;
+}
+
+h3,
+.h3 {
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.25em;
+  letter-spacing: 0.05em;
+  margin: 0px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.5em;
+  letter-spacing: 0.05em;
+  margin: 0px;
+}
+
+@media (max-width: 1023px) {
+  h1,
+  .h1 {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.25em;
+    letter-spacing: 0.05em;
+    margin: 0px;
+  }
+
+  h2,
+  .h2 {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.25em;
+    letter-spacing: 0.05em;
+    margin: 0px;
+  }
+
+  h3,
+  .h3 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.25em;
+    letter-spacing: 0.05em;
+    margin: 0px;
+  }
+}
