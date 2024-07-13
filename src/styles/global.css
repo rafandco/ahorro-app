@@ -19,7 +19,7 @@
   --gray-ultra-dark: #1a1a1a;
   --black: black;
 
-  --rounded-sm: 8px;
+  --rounded-small: 8px;
   --rounded: 16px;
 
   --gap-small: 8px;
@@ -49,7 +49,13 @@
 }
 
 body {
+  min-height: 100vh;
   font-family: "Inter Variable", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
 }
 
 h1,
