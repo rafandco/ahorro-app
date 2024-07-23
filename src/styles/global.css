@@ -101,6 +101,14 @@ p {
 }
 
 @media (max-width: 1023px) {
+  .display {
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.25em;
+    letter-spacing: 0.05em;
+    margin: 0px;
+  }
+
   h1,
   .h1 {
     font-size: 32px;

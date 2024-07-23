@@ -19,4 +19,17 @@ const { id } = Astro.props
     align-items: center;
     gap: var(--gap-xlarge);
   }
+
+  /* Media query para tablets */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    section {
+      width: 768px;
+    }
+  }
+
+  /* Media query para dispositivos móviles */
+  @media (max-width: 767px) {
+    section {
+      width: 360px;
+  }
 </style>
