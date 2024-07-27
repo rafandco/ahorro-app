@@ -16,7 +16,7 @@ export async function GET(context: APIContext): Promise<Response> {
   const password = formData.get("password")
 
   // Validar los datos
-  /* En caso de que no introduzcn los campos obligatorios, respondemos con error 400 error de cliente */
+  /* En caso de que no introduzca los campos obligatorios, respondemos con error 400 error de cliente */
   if (!userName || !firstName || !lastName || !password) {
     return new Response(
       "First name, last name, username and password are required",
@@ -67,7 +67,7 @@ export async function GET(context: APIContext): Promise<Response> {
   const session = await lucia.createSession(userId, {})
   // Creamos la cookie de esa sesión
   const sessionCookie = await lucia.createSessionCookie(session.id)
-  // Añadimos la cookie al constexto del navegador
+  // Añadimos la cookie al contexto del navegador
   context.cookies.set(
     sessionCookie.name,
     sessionCookie.value,
