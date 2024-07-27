@@ -3,7 +3,7 @@ import { defineDb, defineTable, column, NOW } from "astro:db"
 // Tabla de usuarios
 const User = defineTable({
   columns: {
-    id: column.number({ primaryKey: true, unique: true }),
+    id: column.text({ primaryKey: true, unique: true }),
     userName: column.text({ unique: true }),
     firstName: column.text(),
     lastName: column.text(),
@@ -15,7 +15,7 @@ const User = defineTable({
 const Session = defineTable({
   columns: {
     id: column.text({ unique: true }), // eliminar primaryKey: true si da error
-    userId: column.number({ references: () => User.columns.id }), // IMPORTANTE que se llame exactamente userId en camelCase
+    userId: column.text({ references: () => User.columns.id }), // IMPORTANTE que se llame exactamente userId en camelCase
     expiresAt: column.number(), // IMPORTANTE que se llame exactamente expiresAt en camelCase
   },
 })
@@ -23,11 +23,11 @@ const Session = defineTable({
 // Tabla de entradas
 const Entry = defineTable({
   columns: {
-    id: column.number({ primaryKey: true }),
+    id: column.text({ primaryKey: true }),
     initialAmount: column.number(),
     finalAmount: column.number(),
     createdAt: column.date({ default: NOW }),
-    userId: column.number({ references: () => User.columns.id }),
+    userId: column.text({ references: () => User.columns.id }),
   },
 })
 
