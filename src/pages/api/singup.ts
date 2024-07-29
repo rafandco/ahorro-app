@@ -10,33 +10,40 @@ export async function GET(context: APIContext): Promise<Response> {
   /* Recogemos del formulario todos los datos
      Recuerda que estos nombres deben coincidir con los atributos name de los inputs del formulario
     */
-  const userName = formData.get("username")
+  const username = formData.get("username")
+  const email = formData.get("email")
   const firstName = formData.get("firstname")
   const lastName = formData.get("lastname")
   const password = formData.get("password")
 
   // Validar los datos
   /* En caso de que no introduzca los campos obligatorios, respondemos con error 400 error de cliente */
-  if (!userName || !firstName || !lastName || !password) {
+  if (!username || !email || !firstName || !lastName || !password) {
     return new Response(
       "First name, last name, username and password are required",
       { status: 400 }
     )
   }
   /* En caso de que no introduzca usuario de tipo string o de longitud menor a 4 caracteres respondemos con error 400 error de cliente */
-  if (typeof userName !== "string" || userName.length < 4) {
+  if (typeof username !== "string" || username.length < 4) {
     return new Response("Username must be at least 4 characters long", {
       status: 400,
     })
   }
+  /* En caso de que no introduzca email de tipo string o que no contenga @ respondemos con error 400 error de cliente */
+  if (typeof email !== "string" || !email.includes("@")) {
+    return new Response("Email must contain @", {
+      status: 400,
+    })
+  }
   /* En caso de que no introduzca nombre de tipo string o de longitud menor a 2 caracteres respondemos con error 400 error de cliente */
-  if (typeof firstName !== "string" || userName.length < 2) {
+  if (typeof firstName !== "string" || firstName.length < 2) {
     return new Response("First name must be at least 2 characters long", {
       status: 400,
     })
   }
   /* En caso de que no introduzca apellidos de tipo string o de longitud menor a 2 caracteres respondemos con error 400 error de cliente */
-  if (typeof lastName !== "string" || userName.length < 2) {
+  if (typeof lastName !== "string" || lastName.length < 2) {
     return new Response("Last name must be at least 2 characters long", {
       status: 400,
     })
@@ -56,7 +63,8 @@ export async function GET(context: APIContext): Promise<Response> {
   await db.insert(User).values([
     {
       id: userId,
-      userName: userName,
+      username: username,
+      email: email,
       firstName: firstName,
       lastName: lastName,
       password: hashedPassword,
