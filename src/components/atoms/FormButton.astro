@@ -1,0 +1,25 @@
+---
+interface Props {
+  type: "submit" | "button" | "reset"
+}
+
+const { type } = Astro.props
+---
+
+<button type={type}><slot /></button>
+<style>
+  button {
+    font-family: "Inter Variable", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px 32px;
+    background-color: var(--dark-spring-green);
+    border: 0px;
+    border-radius: var(--rounded-small);
+    color: var(--white);
+  }
+
+  button:hover {
+    background: var(--dark-spring-green-light);
+  }
+</style>

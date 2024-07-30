@@ -4,7 +4,7 @@ import { Argon2id } from "oslo/password"
 import { db, User } from "astro:db"
 import { lucia } from "../../auth"
 
-export async function GET(context: APIContext): Promise<Response> {
+export async function POST(context: APIContext): Promise<Response> {
   // Recoger datos del formulario de registro a partir del "context"
   const formData = await context.request.formData()
   /* Recogemos del formulario todos los datos

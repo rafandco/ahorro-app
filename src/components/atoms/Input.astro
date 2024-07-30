@@ -1,0 +1,67 @@
+---
+interface Props {
+  type: string
+  id: string
+  name: string
+  label: string
+  value?: string
+  placeholder: string
+  required: boolean
+  minlength?: number
+  maxlength?: number
+}
+
+const {
+  type,
+  id,
+  name,
+  label,
+  value,
+  placeholder,
+  required,
+  minlength,
+  maxlength,
+} = Astro.props
+---
+
+<div>
+  <label for={name}>{label}</label>
+  <input
+    type={type}
+    id={id}
+    name={name}
+    value={value}
+    type="text"
+    placeholder={placeholder}
+    required={required}
+    minlength={minlength}
+    maxlength={maxlength}
+  />
+</div>
+
+<style>
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-small);
+  }
+  label {
+    font-weight: 600;
+  }
+  input {
+    font-family: "Inter Variable", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-dark);
+    background-color: var(--gray-light);
+    line-height: 1.5em;
+    letter-spacing: 0.05em;
+    margin: 0px;
+    padding: 16px;
+    border: 0px;
+    border-radius: var(--rounded-small);
+  }
+  input:focus {
+    outline: 2px solid var(--dark-spring-green-light);
+  }
+</style>
