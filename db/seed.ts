@@ -24,8 +24,8 @@ export default async function seed() {
   await db.insert(Entry).values([
     {
       id: "1",
-      initialAmount: 10,
-      finalAmount: 20,
+      initialAmount: 10.5,
+      finalAmount: 20.56,
       createdAt: new Date(Date.now()),
       userId: "1",
     },

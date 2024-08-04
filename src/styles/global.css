@@ -51,6 +51,7 @@
 body {
   min-height: 100vh;
   font-family: "Inter Variable", sans-serif;
+  font-size: 16px;
   display: grid;
   grid: "header" auto "main" 1fr "footer" auto / 1fr;
   gap: 16px;
@@ -116,11 +117,55 @@ h3,
   margin: 0px;
 }
 
-p {
+strong,
+.strong {
+  font-weight: 600;
+}
+
+p,
+.p {
   font-size: 16px;
   line-height: 1.5em;
   letter-spacing: 0.05em;
   margin: 0px;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0;
+}
+
+th {
+  text-align: left;
+  padding: var(--padding-small);
+  background-color: var(--gray-medium);
+}
+
+tr:nth-child(odd) {
+  background-color: var(--gray-light);
+}
+tr:nth-child(even) {
+  background-color: var(--gray-ultra-light);
+}
+
+table tr:first-child th:first-child {
+  border-top-left-radius: var(--rounded);
+}
+
+table tr:first-child th:last-child {
+  border-top-right-radius: var(--rounded);
+}
+
+table tr:last-child td:first-child {
+  border-bottom-left-radius: var(--rounded);
+}
+
+table tr:last-child td:last-child {
+  border-bottom-right-radius: var(--rounded);
+}
+
+td {
+  padding: var(--padding-small);
 }
 
 @media (max-width: 1023px) {

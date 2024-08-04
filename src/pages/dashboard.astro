@@ -1,8 +1,11 @@
 ---
+import { db, eq, User, Entry } from "astro:db"
 import FormButton from "../components/atoms/FormButton.astro"
 import HeaderSection from "../components/organisms/HeaderSection.astro"
 import Section from "../components/organisms/Section.astro"
 import Layout from "../layouts/Layout.astro"
+import TotalCard from "../components/atoms/TotalCard.astro"
+import Button from "../components/atoms/Button.astro"
 
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -11,18 +14,95 @@ const user = Astro.locals.user
 if (!user) {
   return Astro.redirect("/singup")
 }
+
+// Obtenemos datos del usuario
+const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
+  0
+)
+
+//Obtenemos las entradas del usuario
+
+const entries = await db.select().from(Entry).where(eq(Entry.userId, user.id))
 ---
 
 <Layout title="Dashboard">
   <header>
     <HeaderSection id="header">
-      <h1>User full name</h1>
+      <h1>{userData?.firstName + " " + userData?.lastName}</h1>
       <form action="/api/singout" method="post">
         <FormButton type="submit">Cerrar sesión</FormButton>
       </form>
     </HeaderSection>
   </header>
   <main>
-    <Section id="main" />
+    <Section id="totals">
+      <div>
+        <TotalCard>
+          <strong>Dinero total</strong>
+          <p class="h2">-- €</p>
+        </TotalCard>
+        <TotalCard>
+          <strong>Media de ahorro</strong>
+          <p class="h2">-- €</p>
+        </TotalCard>
+      </div>
+    </Section>
+    <Section id="entries">
+      <div>
+        {
+          entries.length == 0 ? (
+            <p>Aún no tienes entradas</p>
+          ) : (
+            <table>
+              <tr>
+                <th>Fecha</th>
+                <th>Catidad inicial</th>
+                <th>Catidad final</th>
+                <th>Ahorro</th>
+              </tr>
+              {entries.map((entry) => (
+                <tr>
+                  <td>{entry.createdAt.toLocaleDateString("Es-es")}</td>
+                  <td>
+                    {new Intl.NumberFormat("es-Es", {
+                      style: "currency",
+                      currency: "EUR",
+                    }).format(entry.initialAmount)}
+                  </td>
+                  <td>
+                    {new Intl.NumberFormat("es-Es", {
+                      style: "currency",
+                      currency: "EUR",
+                    }).format(entry.finalAmount)}
+                  </td>
+                  <td>
+                    {new Intl.NumberFormat("es-Es", {
+                      style: "currency",
+                      currency: "EUR",
+                    }).format(entry.finalAmount - entry.initialAmount)}
+                  </td>
+                </tr>
+              ))}
+            </table>
+          )
+        }
+      </div>
+    </Section>
   </main>
 </Layout>
+<style>
+  div {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: var(--gap);
+  }
+
+  /* Media query para dispositivos móviles */
+  @media (max-width: 767px) {
+    div {
+      flex-direction: column;
+    }
+  }
+</style>
