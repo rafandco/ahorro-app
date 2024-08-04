@@ -3,6 +3,14 @@ import FormButton from "../components/atoms/FormButton.astro"
 import HeaderSection from "../components/organisms/HeaderSection.astro"
 import Section from "../components/organisms/Section.astro"
 import Layout from "../layouts/Layout.astro"
+
+// Almacenamos el usuario de la sesión actual
+const user = Astro.locals.user
+
+// En caso de no existir usuario autenticado, redireccionamos a la página de registro
+if (!user) {
+  return Astro.redirect("/singup")
+}
 ---
 
 <Layout title="Dashboard">
