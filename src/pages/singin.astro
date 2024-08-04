@@ -7,26 +7,28 @@ import Layout from "../layouts/Layout.astro"
 ---
 
 <Layout title="Iniciar sesión">
-  <Hero id="singin-form">
-    <h1 class="display">Iniciar sesión</h1>
-    <Form action="/api/singin" method="POST">
-      <Input
-        type="text"
-        id="username"
-        name="username"
-        label="Nombre de usuario"
-        placeholder="fer07"
-        required={true}
-      />
-      <Input
-        type="password"
-        id="password"
-        name="password"
-        label="Contraseña"
-        placeholder="********"
-        required={true}
-      />
-      <FormButton type="submit">Iniciar sesión</FormButton>
-    </Form>
-  </Hero>
+  <main>
+    <Hero id="singin-form">
+      <h1 class="display">Iniciar sesión</h1>
+      <Form action="/api/singin" method="POST">
+        <Input
+          type="text"
+          id="username"
+          name="username"
+          label="Nombre de usuario"
+          placeholder="fer07"
+          required={true}
+        />
+        <Input
+          type="password"
+          id="password"
+          name="password"
+          label="Contraseña"
+          placeholder="********"
+          required={true}
+        />
+        <FormButton type="submit">Iniciar sesión</FormButton>
+      </Form>
+    </Hero>
+  </main>
 </Layout>

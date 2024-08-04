@@ -1,1 +1,20 @@
-<h1>Dashboard</h1>
+---
+import FormButton from "../components/atoms/FormButton.astro"
+import HeaderSection from "../components/organisms/HeaderSection.astro"
+import Section from "../components/organisms/Section.astro"
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout title="Dashboard">
+  <header>
+    <HeaderSection id="header">
+      <h1>User full name</h1>
+      <form action="/api/singout" method="post">
+        <FormButton type="submit">Cerrar sesión</FormButton>
+      </form>
+    </HeaderSection>
+  </header>
+  <main>
+    <Section id="main" />
+  </main>
+</Layout>

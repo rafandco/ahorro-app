@@ -55,7 +55,7 @@ export async function POST(context: APIContext): Promise<Response> {
   // Creamos la sesión
   const session = await lucia.createSession(foundUser.id, {})
   // Creamos la cookie de esa sesión
-  const sessionCookie = await lucia.createSessionCookie(session.id)
+  const sessionCookie = lucia.createSessionCookie(session.id)
   // Añadimos la cookie al contexto del navegador
   context.cookies.set(
     sessionCookie.name,

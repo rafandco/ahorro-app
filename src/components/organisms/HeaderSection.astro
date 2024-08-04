@@ -1,0 +1,36 @@
+---
+interface Props {
+  id: string
+}
+
+const { id } = Astro.props
+---
+
+<section id={id}>
+  <slot />
+</section>
+
+<style>
+  section {
+    width: 960px;
+    height: auto;
+    padding: var(--padding);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: var(--gap);
+  }
+
+  /* Media query para tablets */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    section {
+      width: 768px;
+    }
+  }
+
+  /* Media query para dispositivos móviles */
+  @media (max-width: 767px) {
+    section {
+      width: 360px;
+  }
+</style>
