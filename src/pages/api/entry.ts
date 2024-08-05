@@ -8,18 +8,14 @@ export async function POST(context: APIContext): Promise<Response> {
   /* Recogemos del formulario todos los datos
      Recuerda que estos nombres deben coincidir con los atributos name de los inputs del formulario
     */
-  const createdAt = formData.get("createdat")
   const initialAmount = formData.get("initialamount")
   const finalAmount = formData.get("finalamount")
 
   // Validar los datos
-  if (!createdAt || !initialAmount || !finalAmount) {
+  if (!initialAmount || !finalAmount) {
     return new Response("Date and amounts are required", {
       status: 400,
     })
-  }
-  if (typeof createdAt !== "string") {
-    return new Response("Invalid date", { status: 400 })
   }
   if (typeof initialAmount !== "string" || parseFloat(initialAmount) < 0) {
     return new Response("Invalid  initial amount", { status: 400 })
@@ -38,7 +34,7 @@ export async function POST(context: APIContext): Promise<Response> {
   const entryId = generateId(15)
   const initialAmountFloat = parseFloat(initialAmount)
   const finalAmountFloat = parseFloat(finalAmount)
-  const cratedAtDate = new Date(createdAt)
+  const cratedAt = new Date(Date.now())
   const userId = user.id
   // Insertamos en la base de datos
   await db.insert(Entry).values([
@@ -46,7 +42,7 @@ export async function POST(context: APIContext): Promise<Response> {
       id: entryId,
       initialAmount: initialAmountFloat,
       finalAmount: finalAmountFloat,
-      createdAt: cratedAtDate,
+      createdAt: cratedAt,
       userId: userId,
     },
   ])

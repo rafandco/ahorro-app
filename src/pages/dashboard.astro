@@ -6,6 +6,7 @@ import Section from "../components/organisms/Section.astro"
 import Layout from "../layouts/Layout.astro"
 import TotalCard from "../components/atoms/TotalCard.astro"
 import FloatButton from "../components/atoms/FloatButton.astro"
+import BarChart from "../components/molecules/BarChart.astro"
 
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -21,8 +22,30 @@ const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
 )
 
 //Obtenemos las entradas del usuario
-
 const entries = await db.select().from(Entry).where(eq(Entry.userId, user.id))
+
+//Función de media de ahorro
+const average = (entries: any) => {
+  let i
+  let element = 0.0
+  for (i = 0; i < entries.length; i++) {
+    const savings = (entries[i].finalAmount - entries[i].initialAmount)
+    element = element + savings
+    
+  }
+  return element/i
+}
+
+// const chartLabels = entries.map((entry) => (entry.createdAt.toLocaleDateString("Es-es")))
+// const chartData = entries.map((entry) => (entry.createdAt.toLocaleDateString("Es-es")))
+
+const chartData = [
+  { label: "Enero", value: 50 },
+  { label: "Febrero", value: 75 },
+  { label: "Marzo", value: 100 },
+  { label: "Abril", value: 25 },
+  { label: "Mayo", value: 50 },
+]
 ---
 
 <Layout title="Dashboard">
@@ -39,19 +62,25 @@ const entries = await db.select().from(Entry).where(eq(Entry.userId, user.id))
     {entries.length == 0 ? (<p>Aún no tienes entradas</p>) 
       : (
     <Section id="totals">
-      <div>
+      <div class="container-horizontal">
         <TotalCard>
           <strong>Dinero total</strong>
-          <p class="h2">-- €</p>
+          <p class="h2"> { new Intl.NumberFormat("Es-es", {
+            style: "currency",
+            currency: "EUR",
+          }).format(entries[entries.length-1].finalAmount)} </p>
         </TotalCard>
         <TotalCard>
           <strong>Media de ahorro</strong>
-          <p class="h2">-- €</p>
+          <p class="h2">{ new Intl.NumberFormat("Es-es", {
+            style: "currency",
+            currency: "EUR",
+          }).format(average(entries))}</p>
         </TotalCard>
       </div>
     </Section>
     <Section id="entries">
-      <div>
+      <div class="container-horizontal">
         <table>
           <tr>
             <th>Fecha</th>
@@ -85,16 +114,29 @@ const entries = await db.select().from(Entry).where(eq(Entry.userId, user.id))
             ))
           }
         </table>
-        
+        <div class="container-vertical">
+          <BarChart data={chartData} label="Dinero total"></BarChart>
+          <BarChart data={chartData} label="Ahorro"></BarChart>
+        </div>
       </div>
     </Section>)
     }
   </main>
 </Layout>
 <style>
-  div {
+  .container-horizontal {
+    width: 100%;
     display: flex;
     flex-direction: row;
+    align-items: start;
+    justify-content: center;
+    gap: var(--gap);
+  }
+
+  .container-vertical {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     align-items: stretch;
     justify-content: center;
     gap: var(--gap);
