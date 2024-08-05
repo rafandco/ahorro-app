@@ -5,10 +5,13 @@ interface Props {
   name: string
   label: string
   value?: string
-  placeholder: string
+  placeholder?: string
   required: boolean
   minlength?: number
   maxlength?: number
+  min?: number
+  max?: number
+  step?: number
 }
 
 const {
@@ -21,6 +24,9 @@ const {
   required,
   minlength,
   maxlength,
+  min,
+  max,
+  step,
 } = Astro.props
 ---
 
@@ -36,6 +42,9 @@ const {
     required={required}
     minlength={minlength}
     maxlength={maxlength}
+    min={min}
+    max={max}
+    step={step}
   />
 </div>
 

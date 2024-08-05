@@ -1,0 +1,53 @@
+---
+import FormButton from "../components/atoms/FormButton.astro"
+import Input from "../components/atoms/Input.astro"
+import Form from "../components/molecules/Form.astro"
+import Hero from "../components/organisms/Hero.astro"
+import Layout from "../layouts/Layout.astro"
+
+// Almacenamos el usuario de la sesión actual
+const user = Astro.locals.user
+
+// En caso de no existir usuario autenticado, redireccionamos a la página de registro
+if (!user) {
+  return Astro.redirect("/singup")
+}
+---
+
+<Layout title="Añadir entrada">
+  <main>
+    <Hero id="add-entry-form">
+      <h1 class="display">Añadir entrada</h1>
+      <Form action="/api/entry" method="POST">
+        <Input
+          type="date"
+          id="createdat"
+          name="createdat"
+          label="Fecha"
+          required={true}
+        />
+        <Input
+          type="number"
+          id="initialamount"
+          name="initialamount"
+          label="Cantidad inicial"
+          placeholder="100,00"
+          required={true}
+          min={0.0}
+          step={0.01}
+        />
+        <Input
+          type="number"
+          id="finalamount"
+          name="finalamount"
+          label="Cantidad final"
+          placeholder="100,00"
+          required={true}
+          min={0.0}
+          step={0.01}
+        />
+        <FormButton type="submit">Añadir entrada</FormButton>
+      </Form>
+    </Hero>
+  </main>
+</Layout>

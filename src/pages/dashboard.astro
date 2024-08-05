@@ -5,7 +5,7 @@ import HeaderSection from "../components/organisms/HeaderSection.astro"
 import Section from "../components/organisms/Section.astro"
 import Layout from "../layouts/Layout.astro"
 import TotalCard from "../components/atoms/TotalCard.astro"
-import Button from "../components/atoms/Button.astro"
+import FloatButton from "../components/atoms/FloatButton.astro"
 
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -35,6 +35,9 @@ const entries = await db.select().from(Entry).where(eq(Entry.userId, user.id))
     </HeaderSection>
   </header>
   <main>
+    <FloatButton href="/add-entry">Añadir entrada</FloatButton>
+    {entries.length == 0 ? (<p>Aún no tienes entradas</p>) 
+      : (
     <Section id="totals">
       <div>
         <TotalCard>
@@ -49,45 +52,43 @@ const entries = await db.select().from(Entry).where(eq(Entry.userId, user.id))
     </Section>
     <Section id="entries">
       <div>
-        {
-          entries.length == 0 ? (
-            <p>Aún no tienes entradas</p>
-          ) : (
-            <table>
+        <table>
+          <tr>
+            <th>Fecha</th>
+            <th>Catidad inicial</th>
+            <th>Catidad final</th>
+            <th>Ahorro</th>
+          </tr>
+          {
+            entries.map((entry) => (
               <tr>
-                <th>Fecha</th>
-                <th>Catidad inicial</th>
-                <th>Catidad final</th>
-                <th>Ahorro</th>
+                <td>{entry.createdAt.toLocaleDateString("Es-es")}</td>
+                <td>
+                  {new Intl.NumberFormat("Es-es", {
+                    style: "currency",
+                    currency: "EUR",
+                  }).format(entry.initialAmount)}
+                </td>
+                <td>
+                  {new Intl.NumberFormat("Es-es", {
+                    style: "currency",
+                    currency: "EUR",
+                  }).format(entry.finalAmount)}
+                </td>
+                <td>
+                  {new Intl.NumberFormat("Es-es", {
+                    style: "currency",
+                    currency: "EUR",
+                  }).format(entry.finalAmount - entry.initialAmount)}
+                </td>
               </tr>
-              {entries.map((entry) => (
-                <tr>
-                  <td>{entry.createdAt.toLocaleDateString("Es-es")}</td>
-                  <td>
-                    {new Intl.NumberFormat("es-Es", {
-                      style: "currency",
-                      currency: "EUR",
-                    }).format(entry.initialAmount)}
-                  </td>
-                  <td>
-                    {new Intl.NumberFormat("es-Es", {
-                      style: "currency",
-                      currency: "EUR",
-                    }).format(entry.finalAmount)}
-                  </td>
-                  <td>
-                    {new Intl.NumberFormat("es-Es", {
-                      style: "currency",
-                      currency: "EUR",
-                    }).format(entry.finalAmount - entry.initialAmount)}
-                  </td>
-                </tr>
-              ))}
-            </table>
-          )
-        }
+            ))
+          }
+        </table>
+        
       </div>
-    </Section>
+    </Section>)
+    }
   </main>
 </Layout>
 <style>

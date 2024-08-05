@@ -8,10 +8,8 @@ export async function POST(context: APIContext): Promise<Response> {
       status: 401,
     })
   }
-
   // En caso de si existir la sesión, la invalidamos
   await lucia.invalidateSession(context.locals.session.id)
-
   // Y creamos una cookie de sesión vacía
   const sessionCookie = lucia.createBlankSessionCookie()
   context.cookies.set(
@@ -19,7 +17,6 @@ export async function POST(context: APIContext): Promise<Response> {
     sessionCookie.value,
     sessionCookie.attributes
   )
-
   // Redireccionamos a la página principal
   return context.redirect("/")
 }
