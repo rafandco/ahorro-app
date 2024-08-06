@@ -5,6 +5,31 @@ export interface Props {
 }
 
 const { data, label } = Astro.props
+
+const max = Math.max.apply(
+  Math,
+  data.map((row) => row.value)
+)
+
+const min = Math.min.apply(
+  Math,
+  data.map((row) => row.value)
+)
+
+const labelsv = (max: number, min: number) => {
+  const labelspos: any = []
+
+  if (min < 0) {
+    for (let index = min; index < 0; index += max / 4) {
+      labelspos.push({ label: index.toLocaleString() })
+    }
+  }
+  for (let index = 0; index <= max; index += max / 4) {
+    labelspos.push({ label: index.toLocaleString() })
+  }
+
+  return labelspos.reverse()
+}
 ---
 
 <style>
@@ -19,7 +44,13 @@ const { data, label } = Astro.props
     background-color: var(--gray-ultra-light);
   }
 
-  .bars {
+  .bar-container {
+    height: 100%;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .bars-positive {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
@@ -32,7 +63,7 @@ const { data, label } = Astro.props
     padding: 0 var(--padding-small) 0 var(--padding-small);
   }
 
-  .bar {
+  .bar-positive {
     background-color: var(--spring-green);
     width: calc(100% / var(--num-bars));
     border-radius: var(--rounded-small) var(--rounded-small) 0 0;
@@ -89,23 +120,28 @@ const { data, label } = Astro.props
   <div class="data-wrapper">
     <div class="labels-v">
       {
-        data.map((item: { label: string; value: number }) => (
-          <div class="label-v">{item.value}</div>
+        labelsv(max, min).map((item: { label: string; value: number }) => (
+          <p class="caption label-v">{item.label}</p>
         ))
       }
     </div>
     <div class="data-container">
-      <div class="bars">
-        {
-          data.map((item: { label: string; value: number }) => (
-            <div class="bar" style={`height: calc(${item.value} * 1%)`} />
-          ))
-        }
+      <div class="bar-container">
+        <div class="bars-positive">
+          {
+            data.map((item) => (
+              <div
+                class="bar-positive"
+                style={`height: calc(${(item.value / max) * 100}%`}
+              />
+            ))
+          }
+        </div>
       </div>
       <div class="labels-h">
         {
           data.map((item: { label: string; value: number }) => (
-            <div class="label">{item.label}</div>
+            <p class="caption label">{item.label}</p>
           ))
         }
       </div>

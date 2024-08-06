@@ -130,6 +130,14 @@ p,
   margin: 0px;
 }
 
+caption,
+.caption {
+  font-size: 12px;
+  line-height: 1.5em;
+  letter-spacing: 0.05em;
+  margin: 0px;
+}
+
 table {
   width: 100%;
   border-spacing: 0;

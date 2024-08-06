@@ -6,7 +6,9 @@ import Section from "../components/organisms/Section.astro"
 import Layout from "../layouts/Layout.astro"
 import TotalCard from "../components/atoms/TotalCard.astro"
 import FloatButton from "../components/atoms/FloatButton.astro"
-import BarChart from "../components/molecules/BarChart.astro"
+import BarChart from "../components/molecules/BarChartWithNegatives.astro"
+import BarChartOnlyPositives from "../components/molecules/BarChartOnlyPositives.astro"
+import BarChartWithNegatives from "../components/molecules/BarChartWithNegatives.astro"
 
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -36,16 +38,17 @@ const average = (entries: any) => {
   return element/i
 }
 
-// const chartLabels = entries.map((entry) => (entry.createdAt.toLocaleDateString("Es-es")))
-// const chartData = entries.map((entry) => (entry.createdAt.toLocaleDateString("Es-es")))
 
-const chartData = [
-  { label: "Enero", value: 50 },
-  { label: "Febrero", value: 75 },
-  { label: "Marzo", value: 100 },
-  { label: "Abril", value: 25 },
-  { label: "Mayo", value: 50 },
-]
+// Recopilamos los datos para los gráficos
+const totalChart = (entries: any) :{ label: string; value: number; }[] => {
+  return entries.map((entry: any) => ({label: entry.createdAt.toLocaleDateString("Es-es"), value: entry.finalAmount}))
+}
+const totalChartData = totalChart(entries)
+
+const savingsChart = (entries: any): { label: string; value: number; }[]  => {
+  return entries.map((entry: any) => ({label: entry.createdAt.toLocaleDateString("Es-es"), value: entry.finalAmount - entry.initialAmount}))
+}
+const savingsChartData = savingsChart(entries)
 ---
 
 <Layout title="Dashboard">
@@ -115,8 +118,8 @@ const chartData = [
           }
         </table>
         <div class="container-vertical">
-          <BarChart data={chartData} label="Dinero total"></BarChart>
-          <BarChart data={chartData} label="Ahorro"></BarChart>
+          <BarChartOnlyPositives data={totalChartData} label="Dinero total"></BarChartOnlyPositives>
+          <BarChartWithNegatives data={savingsChartData} label="Ahorro"></BarChartWithNegatives>
         </div>
       </div>
     </Section>)
