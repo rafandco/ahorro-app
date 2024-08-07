@@ -53,6 +53,7 @@ body {
   font-family: "Inter Variable", sans-serif;
   font-size: 16px;
   display: grid;
+
   grid: "header" auto "main" 1fr "footer" auto / 1fr;
   gap: 16px;
   margin: 0;
@@ -132,7 +133,7 @@ p,
 
 caption,
 .caption {
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1.5em;
   letter-spacing: 0.05em;
   margin: 0px;
@@ -176,7 +177,34 @@ td {
   padding: var(--padding-small);
 }
 
+/* width */
+::-webkit-scrollbar {
+  height: 12px;
+  border-radius: 0 0 16px 16px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--gray-ultra-light);
+  border-radius: 0 0 16px 16px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--gray-medium);
+  border-radius: 8px 8px 8px 8px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-dark);
+  border-radius: 8px 8px 8px 8px;
+}
+
 @media (max-width: 1023px) {
+  body {
+    font-size: 12px;
+  }
   .display {
     font-size: 48px;
     font-weight: 600;
