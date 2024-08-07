@@ -1,39 +1,39 @@
-import { l as lucia } from "./auth_D83w-6tN.mjs"
-import { serialize, parse } from "cookie"
-import { A as AstroError, R as ResponseSentError } from "./astro/assets-service_kp3Ss3ih.mjs"
+import { l as lucia } from './auth_N4u3ISEh.mjs';
+import { serialize, parse } from 'cookie';
+import { A as AstroError, R as ResponseSentError } from './astro/assets-service_BhiTib06.mjs';
 
-const DELETED_EXPIRATION = /* @__PURE__ */ new Date(0)
-const DELETED_VALUE = "deleted"
-const responseSentSymbol = Symbol.for("astro.responseSent")
+const DELETED_EXPIRATION = /* @__PURE__ */ new Date(0);
+const DELETED_VALUE = "deleted";
+const responseSentSymbol = Symbol.for("astro.responseSent");
 class AstroCookie {
   constructor(value) {
-    this.value = value
+    this.value = value;
   }
   json() {
     if (this.value === void 0) {
-      throw new Error("Cannot convert undefined to an object.")
+      throw new Error(`Cannot convert undefined to an object.`);
     }
-    return JSON.parse(this.value)
+    return JSON.parse(this.value);
   }
   number() {
-    return Number(this.value)
+    return Number(this.value);
   }
   boolean() {
-    if (this.value === "false") return false
-    if (this.value === "0") return false
-    return Boolean(this.value)
+    if (this.value === "false") return false;
+    if (this.value === "0") return false;
+    return Boolean(this.value);
   }
 }
 class AstroCookies {
-  #request
-  #requestValues
-  #outgoing
-  #consumed
+  #request;
+  #requestValues;
+  #outgoing;
+  #consumed;
   constructor(request) {
-    this.#request = request
-    this.#requestValues = null
-    this.#outgoing = null
-    this.#consumed = false
+    this.#request = request;
+    this.#requestValues = null;
+    this.#outgoing = null;
+    this.#consumed = false;
   }
   /**
    * Astro.cookies.delete(key) is used to delete a cookie. Using this method will result
@@ -48,16 +48,16 @@ class AstroCookies {
       // @ts-expect-error
       expires: _ignoredExpires,
       ...sanitizedOptions
-    } = options || {}
+    } = options || {};
     const serializeOptions = {
       expires: DELETED_EXPIRATION,
       ...sanitizedOptions
-    }
+    };
     this.#ensureOutgoingMap().set(key, [
       DELETED_VALUE,
       serialize(key, DELETED_VALUE, serializeOptions),
       false
-    ])
+    ]);
   }
   /**
    * Astro.cookies.get(key) is used to get a cookie value. The cookie value is read from the
@@ -68,17 +68,17 @@ class AstroCookies {
    */
   get(key, options = void 0) {
     if (this.#outgoing?.has(key)) {
-      let [serializedValue, , isSetValue] = this.#outgoing.get(key)
+      let [serializedValue, , isSetValue] = this.#outgoing.get(key);
       if (isSetValue) {
-        return new AstroCookie(serializedValue)
+        return new AstroCookie(serializedValue);
       } else {
-        return void 0
+        return void 0;
       }
     }
-    const values = this.#ensureParsed(options)
+    const values = this.#ensureParsed(options);
     if (key in values) {
-      const value = values[key]
-      return new AstroCookie(value)
+      const value = values[key];
+      return new AstroCookie(value);
     }
   }
   /**
@@ -89,11 +89,11 @@ class AstroCookies {
    */
   has(key, options = void 0) {
     if (this.#outgoing?.has(key)) {
-      let [, , isSetValue] = this.#outgoing.get(key)
-      return isSetValue
+      let [, , isSetValue] = this.#outgoing.get(key);
+      return isSetValue;
     }
-    const values = this.#ensureParsed(options)
-    return !!values[key]
+    const values = this.#ensureParsed(options);
+    return !!values[key];
   }
   /**
    * Astro.cookies.set(key, value) is used to set a cookie's value. If provided
@@ -108,34 +108,34 @@ class AstroCookies {
     if (this.#consumed) {
       const warning = new Error(
         "Astro.cookies.set() was called after the cookies had already been sent to the browser.\nThis may have happened if this method was called in an imported component.\nPlease make sure that Astro.cookies.set() is only called in the frontmatter of the main page."
-      )
-      warning.name = "Warning"
-      console.warn(warning)
+      );
+      warning.name = "Warning";
+      console.warn(warning);
     }
-    let serializedValue
+    let serializedValue;
     if (typeof value === "string") {
-      serializedValue = value
+      serializedValue = value;
     } else {
-      let toStringValue = value.toString()
+      let toStringValue = value.toString();
       if (toStringValue === Object.prototype.toString.call(value)) {
-        serializedValue = JSON.stringify(value)
+        serializedValue = JSON.stringify(value);
       } else {
-        serializedValue = toStringValue
+        serializedValue = toStringValue;
       }
     }
-    const serializeOptions = {}
+    const serializeOptions = {};
     if (options) {
-      Object.assign(serializeOptions, options)
+      Object.assign(serializeOptions, options);
     }
     this.#ensureOutgoingMap().set(key, [
       serializedValue,
       serialize(key, serializedValue, serializeOptions),
       true
-    ])
+    ]);
     if (this.#request[responseSentSymbol]) {
       throw new AstroError({
         ...ResponseSentError
-      })
+      });
     }
   }
   /**
@@ -143,10 +143,10 @@ class AstroCookies {
    * will be added to the current instance, overwriting any existing cookies with the same name.
    */
   merge(cookies) {
-    const outgoing = cookies.#outgoing
+    const outgoing = cookies.#outgoing;
     if (outgoing) {
       for (const [key, value] of outgoing) {
-        this.#ensureOutgoingMap().set(key, value)
+        this.#ensureOutgoingMap().set(key, value);
       }
     }
   }
@@ -157,9 +157,9 @@ class AstroCookies {
    * @returns
    */
   *headers() {
-    if (this.#outgoing == null) return
+    if (this.#outgoing == null) return;
     for (const [, value] of this.#outgoing) {
-      yield value[1]
+      yield value[1];
     }
   }
   /**
@@ -167,112 +167,112 @@ class AstroCookies {
    * but allows a warning when cookies are set after the instance is consumed.
    */
   static consume(cookies) {
-    cookies.#consumed = true
-    return cookies.headers()
+    cookies.#consumed = true;
+    return cookies.headers();
   }
   #ensureParsed(options = void 0) {
     if (!this.#requestValues) {
-      this.#parse(options)
+      this.#parse(options);
     }
     if (!this.#requestValues) {
-      this.#requestValues = {}
+      this.#requestValues = {};
     }
-    return this.#requestValues
+    return this.#requestValues;
   }
   #ensureOutgoingMap() {
     if (!this.#outgoing) {
-      this.#outgoing = /* @__PURE__ */ new Map()
+      this.#outgoing = /* @__PURE__ */ new Map();
     }
-    return this.#outgoing
+    return this.#outgoing;
   }
   #parse(options = void 0) {
-    const raw = this.#request.headers.get("cookie")
+    const raw = this.#request.headers.get("cookie");
     if (!raw) {
-      return
+      return;
     }
-    this.#requestValues = parse(raw, options)
+    this.#requestValues = parse(raw, options);
   }
 }
 
 function sequence(...handlers) {
-  const filtered = handlers.filter((h) => !!h)
-  const length = filtered.length
+  const filtered = handlers.filter((h) => !!h);
+  const length = filtered.length;
   if (!length) {
     return defineMiddleware((_context, next) => {
-      return next()
-    })
+      return next();
+    });
   }
   return defineMiddleware((context, next) => {
-    let carriedPayload = void 0
-    return applyHandle(0, context)
+    let carriedPayload = void 0;
+    return applyHandle(0, context);
     function applyHandle(i, handleContext) {
-      const handle = filtered[i]
+      const handle = filtered[i];
       const result = handle(handleContext, async (payload) => {
         if (i < length - 1) {
           if (payload) {
-            let newRequest
+            let newRequest;
             if (payload instanceof Request) {
-              newRequest = payload
+              newRequest = payload;
             } else if (payload instanceof URL) {
-              newRequest = new Request(payload, handleContext.request)
+              newRequest = new Request(payload, handleContext.request);
             } else {
               newRequest = new Request(
                 new URL(payload, handleContext.url.origin),
                 handleContext.request
-              )
+              );
             }
-            carriedPayload = payload
-            handleContext.request = newRequest
-            handleContext.url = new URL(newRequest.url)
-            handleContext.cookies = new AstroCookies(newRequest)
+            carriedPayload = payload;
+            handleContext.request = newRequest;
+            handleContext.url = new URL(newRequest.url);
+            handleContext.cookies = new AstroCookies(newRequest);
           }
-          return applyHandle(i + 1, handleContext)
+          return applyHandle(i + 1, handleContext);
         } else {
-          return next(payload ?? carriedPayload)
+          return next(payload ?? carriedPayload);
         }
-      })
-      return result
+      });
+      return result;
     }
-  })
+  });
 }
 
 function defineMiddleware(fn) {
-  return fn
+  return fn;
 }
 
 const onRequest$1 = defineMiddleware(async (context, next) => {
-  const sessionId = context.cookies.get(lucia.sessionCookieName)?.value ?? null
+  const sessionId = context.cookies.get(lucia.sessionCookieName)?.value ?? null;
   if (!sessionId) {
-    context.locals.user = null
-    context.locals.session = null
-    return next()
+    context.locals.user = null;
+    context.locals.session = null;
+    return next();
   }
-  const { session, user } = await lucia.validateSession(sessionId)
+  const { session, user } = await lucia.validateSession(sessionId);
   if (session && session.fresh) {
-    const sessionCookie = lucia.createSessionCookie(session.id)
+    const sessionCookie = lucia.createSessionCookie(session.id);
     context.cookies.set(
       sessionCookie.name,
       sessionCookie.value,
       sessionCookie.attributes
-    )
+    );
   }
   if (!session) {
-    const sessionCookie = lucia.createBlankSessionCookie()
+    const sessionCookie = lucia.createBlankSessionCookie();
     context.cookies.set(
       sessionCookie.name,
       sessionCookie.value,
       sessionCookie.attributes
-    )
+    );
   }
-  context.locals.session = session
-  context.locals.user = user
-  return next()
-})
+  context.locals.session = session;
+  context.locals.user = user;
+  return next();
+});
 
 const onRequest = sequence(
 	
-  onRequest$1
+	onRequest$1
 	
-)
+);
 
-export { AstroCookies as A, defineMiddleware as d, onRequest as o, sequence as s }
+export { AstroCookies as A, defineMiddleware as d, onRequest as o, sequence as s };

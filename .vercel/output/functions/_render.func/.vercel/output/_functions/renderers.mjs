@@ -1,3 +1,3 @@
-const renderers = []
+const renderers = [];
 
-export { renderers }
+export { renderers };
