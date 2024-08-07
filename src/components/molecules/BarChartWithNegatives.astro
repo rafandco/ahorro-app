@@ -137,8 +137,7 @@ const labelsv = (max: number, min: number) => {
   /* Media query para dispositivos móviles */
   @media (max-width: 767px) {
     .bar-chart {
-      width: auto;
-      max-width: 328px;
+      width: 328px;
     }
   }
 </style>
@@ -170,7 +169,7 @@ const labelsv = (max: number, min: number) => {
             data.map((item) => (
               <div
                 class="bar-negative"
-                style={`height: calc(${(item.value / -max) * 100}%`}
+                style={`height: calc(${(item.value / (-min > max ? min : -max)) * 100}%`}
               />
             ))
           }

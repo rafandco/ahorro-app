@@ -24,6 +24,10 @@ export async function POST(context: APIContext): Promise<Response> {
     return new Response("Invalid final amount", { status: 400 })
   }
 
+  if (parseFloat(finalAmount) - parseFloat(initialAmount) === 0) {
+    return new Response("Amounts must be different", { status: 400 })
+  }
+
   // Comprobamos la autenticación del usuario
   const user = context.locals.user
   if (!user) {

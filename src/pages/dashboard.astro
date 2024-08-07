@@ -11,6 +11,7 @@ import BarChartOnlyPositives from "../components/molecules/BarChartOnlyPositives
 import BarChartWithNegatives from "../components/molecules/BarChartWithNegatives.astro"
 import RedFormButton from "../components/atoms/RedFormButton.astro"
 import SecondaryButton from "../components/atoms/SecondaryButton.astro"
+import DeleteButton from "../components/atoms/DeleteButton.astro"
 
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -33,11 +34,10 @@ const averageSavings = (entries: any) => {
   let i
   let element = 0.0
   for (i = 0; i < entries.length; i++) {
-    const savings = (entries[i].finalAmount - entries[i].initialAmount)
+    const savings = entries[i].finalAmount - entries[i].initialAmount
     element = element + savings
-    
   }
-  return element/i
+  return element / i
 }
 
 //Función de media de ahorro
@@ -45,22 +45,26 @@ const totalSavings = (entries: any) => {
   let i
   let element = 0.0
   for (i = 0; i < entries.length; i++) {
-    const savings = (entries[i].finalAmount - entries[i].initialAmount)
+    const savings = entries[i].finalAmount - entries[i].initialAmount
     element = element + savings
-    
   }
   return element
 }
 
-
 // Recopilamos los datos para los gráficos
-const totalChart = (entries: any) :{ label: string; value: number; }[] => {
-  return entries.map((entry: any) => ({label: entry.createdAt.toLocaleDateString("Es-es"), value: entry.finalAmount}))
+const totalChart = (entries: any): { label: string; value: number }[] => {
+  return entries.map((entry: any) => ({
+    label: entry.createdAt.toLocaleDateString("Es-es"),
+    value: entry.finalAmount,
+  }))
 }
 const totalChartData = totalChart(entries)
 
-const savingsChart = (entries: any): { label: string; value: number; }[]  => {
-  return entries.map((entry: any) => ({label: entry.createdAt.toLocaleDateString("Es-es"), value: entry.finalAmount - entry.initialAmount}))
+const savingsChart = (entries: any): { label: string; value: number }[] => {
+  return entries.map((entry: any) => ({
+    label: entry.createdAt.toLocaleDateString("Es-es"),
+    value: entry.finalAmount - entry.initialAmount,
+  }))
 }
 const savingsChartData = savingsChart(entries)
 ---
@@ -74,30 +78,40 @@ const savingsChartData = savingsChart(entries)
   </header>
   <main>
     <FloatButton href="/add-entry">Añadir entrada</FloatButton>
-    {entries.length == 0 ? (<p>Aún no tienes entradas</p>) 
-      : (
-    <Section id="totals">
+    {entries.length == 0 ? (<p>Aún no tienes entradas</p>) : (<Section id="totals">
       <div class="container-horizontal">
         <TotalCard>
           <strong>Dinero total</strong>
-          <p class="h2"> { new Intl.NumberFormat("Es-es", {
-            style: "currency",
-            currency: "EUR",
-          }).format(entries[entries.length-1].finalAmount)} </p>
+          <p class="h2">
+            {
+              new Intl.NumberFormat("Es-es", {
+                style: "currency",
+                currency: "EUR",
+              }).format(entries[entries.length - 1].finalAmount)
+            }
+          </p>
         </TotalCard>
         <TotalCard>
           <strong>Ahorro acumulado</strong>
-          <p class="h2">{ new Intl.NumberFormat("Es-es", {
-            style: "currency",
-            currency: "EUR",
-          }).format(totalSavings(entries))}</p>
+          <p class="h2">
+            {
+              new Intl.NumberFormat("Es-es", {
+                style: "currency",
+                currency: "EUR",
+              }).format(totalSavings(entries))
+            }
+          </p>
         </TotalCard>
         <TotalCard>
           <strong>Media de ahorro</strong>
-          <p class="h2">{ new Intl.NumberFormat("Es-es", {
-            style: "currency",
-            currency: "EUR",
-          }).format(averageSavings(entries))}</p>
+          <p class="h2">
+            {
+              new Intl.NumberFormat("Es-es", {
+                style: "currency",
+                currency: "EUR",
+              }).format(averageSavings(entries))
+            } / mes
+          </p>
         </TotalCard>
       </div>
     </Section>
@@ -109,6 +123,7 @@ const savingsChartData = savingsChart(entries)
             <th>Catidad inicial</th>
             <th>Catidad final</th>
             <th>Ahorro</th>
+            <th></th>
           </tr>
           {
             entries.map((entry) => (
@@ -131,6 +146,18 @@ const savingsChartData = savingsChart(entries)
                     style: "currency",
                     currency: "EUR",
                   }).format(entry.finalAmount - entry.initialAmount)}
+                  
+                </td>
+                <td>
+                  <form action="/api/entry/delete" method="post">
+                    <input
+                      id="entryid"
+                      type="hidden"
+                      name="entryid"
+                      value={entry.id}
+                    />
+                    <DeleteButton>X</DeleteButton>
+                  </form>
                 </td>
               </tr>
             ))
@@ -141,8 +168,9 @@ const savingsChartData = savingsChart(entries)
           <BarChartWithNegatives data={savingsChartData} label="Ahorro"></BarChartWithNegatives>
         </div>
       </div>
-    </Section>)
-    }
+    </Section>)}
+    
+    
   </main>
 </Layout>
 <style>
@@ -170,12 +198,12 @@ const savingsChartData = savingsChart(entries)
       flex-direction: column;
     }
 
-     .container-horizontal {
+    .container-horizontal {
       flex-direction: column;
       align-items: stretch;
     }
-  
-    .container-vertical{
+
+    .container-vertical {
       flex-direction: row;
     }
   }
