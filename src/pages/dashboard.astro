@@ -10,6 +10,7 @@ import BarChart from "../components/molecules/BarChartWithNegatives.astro"
 import BarChartOnlyPositives from "../components/molecules/BarChartOnlyPositives.astro"
 import BarChartWithNegatives from "../components/molecules/BarChartWithNegatives.astro"
 import RedFormButton from "../components/atoms/RedFormButton.astro"
+import SecondaryButton from "../components/atoms/SecondaryButton.astro"
 
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -68,9 +69,7 @@ const savingsChartData = savingsChart(entries)
   <header>
     <HeaderSection id="header">
       <h1>{userData?.firstName + " " + userData?.lastName}</h1>
-      <form action="/api/singout" method="post">
-        <RedFormButton type="submit">Cerrar sesión</RedFormButton>
-      </form>
+      <SecondaryButton href="/update-user">Perfil</SecondaryButton>
     </HeaderSection>
   </header>
   <main>
