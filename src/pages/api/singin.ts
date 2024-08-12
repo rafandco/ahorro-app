@@ -1,11 +1,15 @@
-import type { APIContext } from "astro"
+import type { APIRoute } from "astro"
 import { db, eq, User } from "astro:db"
 import { Argon2id } from "oslo/password"
 import { lucia } from "../../auth"
 
-export async function POST(context: APIContext): Promise<Response> {
+export const POST: APIRoute = async ({
+  request,
+  redirect,
+  cookies,
+}): Promise<Response> => {
   // Recoger datos del formulario de inicio de sesión a partir del "context"
-  const formData = await context.request.formData()
+  const formData = await request.formData()
   /* Recogemos del formulario todos los datos
      Recuerda que estos nombres deben coincidir con los atributos name de los inputs del formulario
     */
@@ -15,15 +19,30 @@ export async function POST(context: APIContext): Promise<Response> {
   // Validar los datos
   /* En caso de que no introduzca los campos obligatorios, respondemos con error 400 error de cliente */
   if (!username || !password) {
-    return new Response("Username and password are required", { status: 400 })
+    return new Response(
+      JSON.stringify({
+        message: "Todos los campos son obligatorios",
+      }),
+      { status: 400 }
+    )
   }
   /* En caso de que no introduzca usuario de tipo string respondemos con error 400 error de cliente */
   if (typeof username !== "string") {
-    return new Response("Invalid username", { status: 400 })
+    return new Response(
+      JSON.stringify({
+        message: "Usuario inválido",
+      }),
+      { status: 400 }
+    )
   }
   /* En caso de que no introduzca contraseña de tipo string respondemos con error 400 error de cliente */
   if (typeof password !== "string") {
-    return new Response("Invalid password", { status: 400 })
+    return new Response(
+      JSON.stringify({
+        message: "Contraseña inválida",
+      }),
+      { status: 400 }
+    )
   }
   // Buscar el usuario en la base de datos
   /* Si hemos indicado que el username en la base de datos es un campo único nos devolverá un 
@@ -33,7 +52,12 @@ export async function POST(context: APIContext): Promise<Response> {
   ).at(0)
   //Si no encontramos a ningún usuario en la base de datos
   if (!foundUser) {
-    return new Response("Invalid username or password", { status: 400 })
+    return new Response(
+      JSON.stringify({
+        message: "Usuario o contraseña incorrectos",
+      }),
+      { status: 400 }
+    )
   }
 
   // Verificar que el usuario tiene contraseña en caso de ofrecer otros medios de iniciar sesión, como Google o Github
@@ -49,7 +73,12 @@ export async function POST(context: APIContext): Promise<Response> {
   )
   // Si la verificación de la contraseña es errónea, devolvemos error
   if (!validPassword) {
-    return new Response("Invalid username or password", { status: 400 })
+    return new Response(
+      JSON.stringify({
+        message: "Invalid username or password",
+      }),
+      { status: 400 }
+    )
   }
   // Si la verificación de la contraseña es correcta, generamos la sesión
   // Creamos la sesión
@@ -57,10 +86,6 @@ export async function POST(context: APIContext): Promise<Response> {
   // Creamos la cookie de esa sesión
   const sessionCookie = lucia.createSessionCookie(session.id)
   // Añadimos la cookie al contexto del navegador
-  context.cookies.set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes
-  )
-  return context.redirect("/dashboard")
+  cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes)
+  return redirect("/dashboard", 303)
 }
