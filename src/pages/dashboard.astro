@@ -5,11 +5,10 @@ import Section from "../components/organisms/Section.astro"
 import Layout from "../layouts/Layout.astro"
 import TotalCard from "../components/atoms/TotalCard.astro"
 import FloatButton from "../components/atoms/FloatButton.astro"
-import BarChartOnlyPositives from "../components/molecules/BarChartOnlyPositives.astro"
-import BarChartWithNegatives from "../components/molecules/BarChartWithNegatives.astro"
 import SecondaryButton from "../components/atoms/SecondaryButton.astro"
 import DeleteButton from "../components/atoms/DeleteButton.astro"
 import NoInputForm from "../components/molecules/NoInputForm.vue"
+import BarChart from "../components/molecules/BarChart.vue"
 
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -65,6 +64,7 @@ const savingsChart = (entries: any): { label: string; value: number }[] => {
   }))
 }
 const savingsChartData = savingsChart(entries)
+
 ---
 
 <Layout title="Dashboard">
@@ -76,7 +76,9 @@ const savingsChartData = savingsChart(entries)
   </header>
   <main>
     <FloatButton href="/add-entry">Añadir entrada</FloatButton>
-    {entries.length == 0 ? (<p>Aún no tienes entradas</p>) : (<Section id="totals">
+    {entries.length == 0 ? (<p>Aún no tienes entradas</p>) : 
+      (
+    <Section id="totals">
       <div class="container-horizontal">
         <TotalCard>
           <strong>Dinero total</strong>
@@ -101,14 +103,14 @@ const savingsChartData = savingsChart(entries)
           </p>
         </TotalCard>
         <TotalCard>
-          <strong>Media de ahorro</strong>
+          <strong>Media de ahorro por mes</strong>
           <p class="h2">
             {
               new Intl.NumberFormat("Es-es", {
                 style: "currency",
                 currency: "EUR",
               }).format(averageSavings(entries))
-            } / mes
+            } 
           </p>
         </TotalCard>
       </div>
@@ -162,12 +164,12 @@ const savingsChartData = savingsChart(entries)
           }
         </table>
         <div class="container-vertical">
-          <BarChartOnlyPositives data={totalChartData} label="Dinero total"></BarChartOnlyPositives>
-          <BarChartWithNegatives data={savingsChartData} label="Ahorro"></BarChartWithNegatives>
+          <BarChart label="Dinero total" data={totalChartData} id="total" client:load />
+          <BarChart label="Ahorro" data={savingsChartData} id="savings"  client:load />
         </div>
       </div>
-    </Section>)}
-    
+    </Section>
+      )}  
     
   </main>
 </Layout>
