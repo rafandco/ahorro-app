@@ -1,17 +1,15 @@
 ---
 import { db, eq, User, Entry } from "astro:db"
-import FormButton from "../components/atoms/FormButton.astro"
 import HeaderSection from "../components/organisms/HeaderSection.astro"
 import Section from "../components/organisms/Section.astro"
 import Layout from "../layouts/Layout.astro"
 import TotalCard from "../components/atoms/TotalCard.astro"
 import FloatButton from "../components/atoms/FloatButton.astro"
-import BarChart from "../components/molecules/BarChartWithNegatives.astro"
 import BarChartOnlyPositives from "../components/molecules/BarChartOnlyPositives.astro"
 import BarChartWithNegatives from "../components/molecules/BarChartWithNegatives.astro"
-import RedFormButton from "../components/atoms/RedFormButton.astro"
 import SecondaryButton from "../components/atoms/SecondaryButton.astro"
 import DeleteButton from "../components/atoms/DeleteButton.astro"
+import NoInputForm from "../components/molecules/NoInputForm.vue"
 
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -73,7 +71,7 @@ const savingsChartData = savingsChart(entries)
   <header>
     <HeaderSection id="header">
       <h1>{userData?.firstName + " " + userData?.lastName}</h1>
-      <SecondaryButton href="/update-user">Perfil</SecondaryButton>
+      <SecondaryButton href="/profile">Perfil</SecondaryButton>
     </HeaderSection>
   </header>
   <main>
@@ -149,7 +147,7 @@ const savingsChartData = savingsChart(entries)
                   
                 </td>
                 <td>
-                  <form action="/api/entry/delete" method="post">
+                  <NoInputForm action="/api/entry" method="DELETE" client:load>
                     <input
                       id="entryid"
                       type="hidden"
@@ -157,7 +155,7 @@ const savingsChartData = savingsChart(entries)
                       value={entry.id}
                     />
                     <DeleteButton>X</DeleteButton>
-                  </form>
+                  </NoInputForm>
                 </td>
               </tr>
             ))

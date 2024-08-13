@@ -1,7 +1,7 @@
 ---
 import FormButton from "../components/atoms/FormButton.astro"
 import Input from "../components/atoms/Input.astro"
-import Form from "../components/molecules/Form.astro"
+import Form from "../components/molecules/Form.vue"
 import Hero from "../components/organisms/Hero.astro"
 import Layout from "../layouts/Layout.astro"
 
@@ -18,7 +18,7 @@ if (!user) {
   <main>
     <Hero id="add-entry-form">
       <h1>Añadir entrada</h1>
-      <Form action="/api/entry/create" method="POST">
+      <Form action="/api/entry" method="POST" client:load>
         <Input
           type="number"
           id="initialamount"

@@ -75,7 +75,7 @@ export const POST: APIRoute = async ({
   if (!validPassword) {
     return new Response(
       JSON.stringify({
-        message: "Invalid username or password",
+        message: "Usuario o contraseña incorrectos",
       }),
       { status: 400 }
     )

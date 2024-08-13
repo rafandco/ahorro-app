@@ -1,24 +1,45 @@
-import { generateId } from "lucia"
-import { Argon2id } from "oslo/password"
-import { db, eq, User } from "astro:db"
-import { lucia } from "../../auth"
 import type { APIRoute } from "astro"
+import { Argon2id } from "oslo/password"
+import { db, eq, ne, and, User } from "astro:db"
 
-export const POST: APIRoute = async ({
+// TODO: Crear GET: APIRoute
+
+export const PUT: APIRoute = async ({
   request,
+  locals,
   redirect,
-  cookies,
 }): Promise<Response> => {
-  // Recoger datos del formulario de registro a partir de la petición
-  const data = await request.formData()
+  // Almacenamos el usuario de la sesión actual
+  const user = locals.user
+  // En caso de no existir usuario autenticado, redireccionamos a la página de registro
+  if (!user) {
+    return new Response(null, { status: 401 })
+  }
+  // Buscar el usuario en la base de datos
+  /* Si hemos indicado que el username en la base de datos es un campo único nos devolverá un 
+    array con 1 usuario. Por ello le haremos el .at(0), aunque solo haya 1 */
+  const foundUser = (
+    await db.select().from(User).where(eq(User.id, user.id))
+  ).at(0)
+  //Si no encontramos a ningún usuario en la base de datos
+  if (!foundUser) {
+    return new Response(
+      JSON.stringify({
+        message: "Usuario no encontrado",
+      }),
+      { status: 400 }
+    )
+  }
+  // Recoger datos del formulario de registro a partir del "context"
+  const formData = await request.formData()
   /* Recogemos del formulario todos los datos
      Recuerda que estos nombres deben coincidir con los atributos name de los inputs del formulario
     */
-  const firstName = data.get("firstname")
-  const lastName = data.get("lastname")
-  const email = data.get("email")
-  const username = data.get("username")
-  const password = data.get("password")
+  const username = formData.get("username")
+  const email = formData.get("email")
+  const firstName = formData.get("firstname")
+  const lastName = formData.get("lastname")
+  const password = formData.get("password")
   // Validar los datos
   /* En caso de que no introduzca los campos obligatorios, respondemos con error 400 error de cliente */
   if (!username || !email || !firstName || !lastName || !password) {
@@ -51,8 +72,7 @@ export const POST: APIRoute = async ({
       }
     )
   }
-
-  /* En caso de que no introduzca email de tipo string o que no cumpla con la regex para emails, respondemos con error 400 error de cliente */
+  /* En caso de que no introduzca email de tipo string o que no contenga @ respondemos con error 400 error de cliente */
   if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return new Response(
       JSON.stringify({
@@ -66,7 +86,12 @@ export const POST: APIRoute = async ({
   /* En caso de que se introduzca un email que ya está en uso responderemos con error 400 error de cliente */
   if (
     email ===
-    (await db.select().from(User).where(eq(User.email, email))).at(0)?.email
+    (
+      await db
+        .select()
+        .from(User)
+        .where(and(ne(User.id, user.id), eq(User.email, email)))
+    ).at(0)?.email
   ) {
     return new Response(
       JSON.stringify({
@@ -91,8 +116,12 @@ export const POST: APIRoute = async ({
   /* En caso de que se introduzca un email que ya está en uso responderemos con error 400 error de cliente */
   if (
     username ===
-    (await db.select().from(User).where(eq(User.username, username))).at(0)
-      ?.username
+    (
+      await db
+        .select()
+        .from(User)
+        .where(and(ne(User.id, user.id), eq(User.username, username)))
+    ).at(0)?.username
   ) {
     return new Response(
       JSON.stringify({
@@ -114,29 +143,33 @@ export const POST: APIRoute = async ({
       }
     )
   }
-  // Añadir el usuario a la base de datos
-  // Generamos el id del nuevo usuario
-  const userId = generateId(15)
-  // Encriptamos la contraseña para insertar el hash en la base de datos usando oslo
-  const hashedPassword = await new Argon2id().hash(password)
+  // Verificar la contraseña
+  //Creamos una variable booleana que verifique la contraseña
+  const validPassword = await new Argon2id().verify(
+    foundUser.password,
+    password
+  )
+  // Si la verificación de la contraseña es errónea, devolvemos error
+  if (!validPassword) {
+    return new Response(
+      JSON.stringify({
+        message: "Confirmación de contraseña incorrecta",
+      }),
+      { status: 400 }
+    )
+  }
+
   // Insertamos en db
-  await db.insert(User).values([
-    {
-      id: userId,
+  await db
+    .update(User)
+    .set({
+      id: user.id,
       username: username,
       email: email,
       firstName: firstName,
       lastName: lastName,
-      password: hashedPassword,
-    },
-  ])
-  // Generamos la sesión correspondiente
-  // Creamos la sesión
-  const session = await lucia.createSession(userId, {})
-  // Creamos la cookie de esa sesión
-  const sessionCookie = lucia.createSessionCookie(session.id)
-  // Añadimos la cookie al contexto del navegador
-  cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes)
+    })
+    .where(eq(User.id, user.id))
   // Redireccionamos al usuario registrado a la página principal
   return redirect("/dashboard", 303)
 }

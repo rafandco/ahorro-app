@@ -36,7 +36,7 @@ async function submit(e: Event) {
 
 <style scoped>
 form {
-  width: 50%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
@@ -50,18 +50,5 @@ p {
   padding: var(--padding);
   background-color: var(--black-bean);
   border-radius: var(--rounded-small);
-}
-/* Media query para tablets */
-@media (min-width: 768px) and (max-width: 1023px) {
-  form {
-    width: 75%;
-  }
-}
-
-/* Media query para dispositivos móviles */
-@media (max-width: 767px) {
-  form {
-    width: 90%;
-  }
 }
 </style>

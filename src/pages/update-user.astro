@@ -2,11 +2,9 @@
 import { db, User, eq } from "astro:db"
 import FormButton from "../components/atoms/FormButton.astro"
 import Input from "../components/atoms/Input.astro"
-import Form from "../components/molecules/Form.astro"
+import Form from "../components/molecules/Form.vue"
 import Hero from "../components/organisms/Hero.astro"
 import Layout from "../layouts/Layout.astro"
-import { Argon2id } from "oslo/password"
-import RedFormButton from "../components/atoms/RedFormButton.astro"
 
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -24,9 +22,9 @@ const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
 
 <Layout title="Registro">
   <main>
-    <Hero id="singup-form">
-      <h1 class="display">Editar perfil</h1>
-      <Form action="/api/edituser" method="POST">
+    <Hero id="update-user-form">
+      <h1>Editar perfil</h1>
+      <Form action="/api/user" method="PUT" client:load>
         <Input
           type="text"
           id="firstname"
@@ -61,23 +59,15 @@ const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
           value={userData?.username}
           required={true}
         />
-
         <Input
           type="password"
           id="password"
           name="password"
-          label="Contraseña *"
+          label="Confirmar contraseña actual"
           placeholder="*******"
           required={true}
         />
-        <p class="caption">
-          * Introduce tu nueva contraseña o la contraseña actual si no quieres
-          cambiarla.
-        </p>
         <FormButton type="submit">Editar perfil</FormButton>
-      </Form>
-      <Form action="/api/singout" method="post">
-        <RedFormButton type="submit">Cerrar sesión</RedFormButton>
       </Form>
     </Hero>
   </main>
