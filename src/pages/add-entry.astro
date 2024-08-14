@@ -1,4 +1,5 @@
 ---
+import { db, Entry, eq } from "astro:db"
 import FormButton from "../components/atoms/FormButton.astro"
 import Input from "../components/atoms/Input.astro"
 import Form from "../components/molecules/Form.vue"
@@ -12,6 +13,13 @@ const user = Astro.locals.user
 if (!user) {
   return Astro.redirect("/singup")
 }
+
+// Obtenemos entradas para sugerir la cantidad inicial
+const lastEntry = (
+  await db.select().from(Entry).where(eq(Entry.userId, user.id))
+).at(-1)
+
+console.log(lastEntry)
 ---
 
 <Layout title="Añadir entrada">
@@ -26,6 +34,7 @@ if (!user) {
           label="Cantidad inicial"
           placeholder="100,00"
           required={true}
+          value={"" + lastEntry?.finalAmount}
           min={0.0}
           step={0.01}
         />
