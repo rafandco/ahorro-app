@@ -20,7 +20,7 @@ async function submit(e: Event) {
   })
   // Si el servidor responde con una redirección, el navegador la seguirá automáticamente.
   if (response.redirected) {
-    window.location.href = response.url
+    window.location.replace(response.url)
   } else {
     const data = await response.json()
     responseMessage.value = data.message

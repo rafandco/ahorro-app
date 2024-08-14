@@ -1,10 +1,11 @@
 ---
 import { db, eq, User } from "astro:db"
 import Button from "../components/atoms/Button.astro"
-import RedFormButton from "../components/atoms/RedFormButton.astro"
+import FormButton from "../components/atoms/FormButton.astro"
 import Layout from "../layouts/Layout.astro"
-import SecondaryButton from "../components/atoms/SecondaryButton.astro"
 import HeaderSection from "../components/organisms/HeaderSection.astro"
+import Section from "../components/organisms/Section.astro"
+import Hero from "../components/organisms/Hero.astro"
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
 
@@ -22,23 +23,77 @@ const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
 <Layout title="Perfil">
   <header>
     <HeaderSection id="header">
-      <h1>{userData?.firstName + " " + userData?.lastName}</h1>
+      <h1>Perfil</h1>
       <form action="/api/singout" method="post">
-        <RedFormButton type="submit">Cerrar sesión</RedFormButton>
+        <FormButton
+          type="submit"
+          color="var(--black)"
+          bgColor="var(--gray-light)"
+          bgColorHover="var(--gray-medium)">Cerrar sesión</FormButton
+        >
       </form>
     </HeaderSection>
   </header>
   <main>
-    <div>
-      <Button href="/update-user">Editar perfil</Button>
-      <!-- <Button href="/update-password">Cambiar contraseña</Button>-->
-    </div>
+    <Hero id="user-info">
+      <article>
+        <h2>Información de usuario</h2>
+        <strong>Nombre</strong>
+        <p>{userData?.firstName}</p>
+        <strong>Apellidos</strong>
+        <p>{userData?.lastName}</p>
+        <strong>Email</strong>
+        <p>{userData?.email}</p>
+        <strong>Nombre de usuario</strong>
+        <p>{userData?.username}</p>
+      </article>
+      <div>
+        <Button
+          href="/update-user"
+          color="var(--white)"
+          bgColor="var(--dark-spring-green)"
+          bgColorHover="var(--dark-spring-green-light)"
+        >
+          Editar perfil
+        </Button>
+        <Button
+          href="/change-password"
+          color="var(--white)"
+          bgColor="var(--dark-spring-green)"
+          bgColorHover="var(--dark-spring-green-light)"
+        >
+          Cambiar contraseña
+        </Button>
+        <Button
+          href="/delete-user"
+          color="var(--white)"
+          bgColor="var(--poppy)"
+          bgColorHover="var(--poppy-light)"
+        >
+          Eliminar cuenta
+        </Button>
+      </div>
+    </Hero>
   </main>
 </Layout>
 <style>
-  div {
+  article {
+    width: 100%;
     display: flex;
+    flex-direction: column;
     gap: var(--gap);
+    justify-content: left;
+    padding: var(--padding);
+    background-color: var(--gray-ultra-light);
+    border-radius: var(--rounded);
+  }
+
+  div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap);
+    justify-content: center;
   }
   @media (max-width: 768px) {
     div {

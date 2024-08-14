@@ -8,7 +8,7 @@ interface Props {
   id: string
 }
 const { label, data, id } = defineProps<Props>()
-const barColors = []
+const barColors: string[] = []
 
 // Establecemos los colores en función de data.value
 for (let i = 0; i < data.length; i++) {
@@ -21,7 +21,7 @@ for (let i = 0; i < data.length; i++) {
 }
 
 onMounted(() => {
-  new Chart(document.getElementById(id), {
+  new Chart(id, {
     type: "bar",
     data: {
       labels: data.map((row) => row.label),
@@ -45,11 +45,20 @@ onMounted(() => {
           },
         },
       },
-      borderRadius: {
-        topLeft: 8,
-        topRight: 8,
-        bottomLeft: 8,
-        bottomRight: 8,
+      elements: {
+        bar: {
+          borderRadius: {
+            topLeft: 8,
+            topRight: 8,
+            bottomLeft: 8,
+            bottomRight: 8,
+          },
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
       },
     },
   })
@@ -68,7 +77,6 @@ div {
   align-items: flex-start;
   width: 100%;
   max-width: 440px;
-  overflow: auto;
   gap: var(--gap);
   padding: var(--padding);
   border-radius: var(--rounded);

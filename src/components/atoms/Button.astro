@@ -1,27 +1,30 @@
 ---
 interface Props {
   href: string
+  color: string
+  bgColor: string
+  bgColorHover: string
 }
 
-const { href } = Astro.props
+const { href, color, bgColor, bgColorHover } = Astro.props
 ---
 
 <a href={href}>
   <slot />
 </a>
 
-<style>
+<style define:vars={{ color, bgColor, bgColorHover }}>
   a {
     padding: 16px 32px;
-    background-color: var(--dark-spring-green);
+    background-color: var(--bgColor);
     border-radius: var(--rounded-small);
-    color: var(--white);
+    color: var(--color);
     text-decoration: none;
     font-weight: 600;
     text-align: center;
   }
 
   a:hover {
-    background: var(--dark-spring-green-light);
+    background-color: var(--bgColorHover);
   }
 </style>

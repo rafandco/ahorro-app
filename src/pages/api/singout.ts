@@ -8,9 +8,12 @@ export const POST: APIRoute = async ({
 }): Promise<Response> => {
   // Comprobamos si hay una sesión y si no la hay devolvemos error 401
   if (!locals.session) {
-    return new Response(null, {
-      status: 401,
-    })
+    return new Response(
+      JSON.stringify({
+        message: "No autorizado",
+      }),
+      { status: 401 }
+    )
   }
   // En caso de si existir la sesión, la invalidamos
   await lucia.invalidateSession(locals.session.id)

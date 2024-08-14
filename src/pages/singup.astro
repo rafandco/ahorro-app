@@ -10,11 +10,7 @@ import Layout from "../layouts/Layout.astro"
   <main>
     <Hero id="singup-form">
       <h1>Registrarse</h1>
-      <Form
-        action="/api/singup"
-        method="POST"
-        client:load
-      >
+      <Form action="/api/singup" method="POST" client:load>
         <Input
           type="text"
           id="firstname"
@@ -57,7 +53,14 @@ import Layout from "../layouts/Layout.astro"
           placeholder="********"
           required={true}
         />
-        <FormButton type="submit">Registrarse</FormButton>
+        <FormButton
+          type="submit"
+          color="var(--white)"
+          bgColor="var(--dark-spring-green)"
+          bgColorHover="var(--dark-spring-green-light)"
+        >
+          Registrarse
+        </FormButton>
       </Form>
     </Hero>
   </main>

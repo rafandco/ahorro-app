@@ -54,16 +54,6 @@ export const POST: APIRoute = async ({
       { status: 400 }
     )
   }
-
-  if (parseFloat(finalAmount) - parseFloat(initialAmount) === 0) {
-    return new Response(
-      JSON.stringify({
-        message: "Las cantidades deben ser diferentes",
-      }),
-      { status: 400 }
-    )
-  }
-
   // Añadir la entrada a la base de datos
   // Generamos y adaptamos los campos necesarios que no son introducidos en el formulario
   const entryId = generateId(15)

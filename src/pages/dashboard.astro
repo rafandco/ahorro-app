@@ -5,10 +5,10 @@ import Section from "../components/organisms/Section.astro"
 import Layout from "../layouts/Layout.astro"
 import TotalCard from "../components/atoms/TotalCard.astro"
 import FloatButton from "../components/atoms/FloatButton.astro"
-import SecondaryButton from "../components/atoms/SecondaryButton.astro"
 import DeleteButton from "../components/atoms/DeleteButton.astro"
 import NoInputForm from "../components/molecules/NoInputForm.vue"
 import BarChart from "../components/molecules/BarChart.vue"
+import Button from "../components/atoms/Button.astro"
 
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -70,8 +70,8 @@ const savingsChartData = savingsChart(entries)
 <Layout title="Dashboard">
   <header>
     <HeaderSection id="header">
-      <h1>{userData?.firstName + " " + userData?.lastName}</h1>
-      <SecondaryButton href="/profile">Perfil</SecondaryButton>
+      <h1>{"Hola, " + userData?.firstName}</h1>
+      <Button href="/profile" color="var(--black)" bgColor="var(--gray-light)" bgColorHover="var(--gray-medium)">Perfil</Button>
     </HeaderSection>
   </header>
   <main>

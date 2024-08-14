@@ -48,12 +48,15 @@
     U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   min-height: 100vh;
   font-family: "Inter Variable", sans-serif;
   font-size: 16px;
   display: grid;
-
   grid: "header" auto "main" 1fr "footer" auto / 1fr;
   gap: 16px;
   margin: 0;

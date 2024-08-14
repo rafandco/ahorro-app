@@ -1,26 +1,30 @@
 ---
 interface Props {
   type: "submit" | "button" | "reset"
+  color: string
+  bgColor: string
+  bgColorHover: string
 }
 
-const { type } = Astro.props
+const { type, color, bgColor, bgColorHover } = Astro.props
 ---
 
 <button type={type}><slot /></button>
-<style>
+<style define:vars={{ color, bgColor, bgColorHover }}>
   button {
     font-family: "Inter Variable", sans-serif;
     font-size: 16px;
     font-weight: 600;
     padding: 16px 32px;
-    background-color: var(--dark-spring-green);
+    background-color: var(--bgColor);
     border: 0px;
     border-radius: var(--rounded-small);
-    color: var(--white);
+    color: var(--color);
   }
 
   button:hover {
-    background: var(--dark-spring-green-light);
+    background: var(--bgColorHover);
+    cursor: pointer;
   }
 
   @media (max-width: 1023px) {

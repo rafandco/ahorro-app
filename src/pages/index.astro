@@ -1,6 +1,5 @@
 ---
 import Button from "../components/atoms/Button.astro"
-import SecondaryButton from "../components/atoms/SecondaryButton.astro"
 import Hero from "../components/organisms/Hero.astro"
 import Layout from "../layouts/Layout.astro"
 ---
@@ -10,8 +9,18 @@ import Layout from "../layouts/Layout.astro"
     <Hero id="Inicio">
       <h1 class="display">Ahorro App</h1>
       <div>
-        <Button href="/singin">Iniciar sesión</Button>
-        <SecondaryButton href="/singup">Registrarse</SecondaryButton>
+        <Button
+          href="/singin"
+          color="var(--white)"
+          bgColor="var(--dark-spring-green)"
+          bgColorHover="var(--dark-spring-green-light)">Iniciar sesión</Button
+        >
+        <Button
+          href="/singup"
+          color="var(--black)"
+          bgColor="var(--gray-light)"
+          bgColorHover="var(--gray-medium)">Registrarse</Button
+        >
       </div>
     </Hero>
   </main>
