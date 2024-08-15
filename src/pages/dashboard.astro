@@ -117,54 +117,53 @@ const savingsChartData = savingsChart(entries)
     </Section>
     <Section id="entries">
       <div class="container-horizontal">
-        <div class="table-container">
-          <table>
-            <tr>
-              <th>Fecha</th>
-              <th>C. inicial</th>
-              <th>C. final</th>
-              <th>Ahorro</th>
-              <th></th>
-            </tr>
-            {
-              entries.map((entry) => (
-                <tr>
-                  <td>{entry.createdAt.toLocaleDateString("Es-es")}</td>
-                  <td>
-                    {new Intl.NumberFormat("Es-es", {
-                      style: "currency",
-                      currency: "EUR",
-                    }).format(entry.initialAmount)}
-                  </td>
-                  <td>
-                    {new Intl.NumberFormat("Es-es", {
-                      style: "currency",
-                      currency: "EUR",
-                    }).format(entry.finalAmount)}
-                  </td>
-                  <td>
-                    {new Intl.NumberFormat("Es-es", {
-                      style: "currency",
-                      currency: "EUR",
-                    }).format(entry.finalAmount - entry.initialAmount)}
+
+        <table>
+          <tr>
+            <th>Fecha</th>
+            <th>C. inicial</th>
+            <th>C. final</th>
+            <th>Ahorro</th>
+            <th></th>
+          </tr>
+          {
+            entries.map((entry) => (
+              <tr>
+                <td>{entry.createdAt.toLocaleDateString("Es-es")}</td>
+                <td>
+                  {new Intl.NumberFormat("Es-es", {
+                    style: "currency",
+                    currency: "EUR",
+                  }).format(entry.initialAmount)}
+                </td>
+                <td>
+                  {new Intl.NumberFormat("Es-es", {
+                    style: "currency",
+                    currency: "EUR",
+                  }).format(entry.finalAmount)}
+                </td>
+                <td>
+                  {new Intl.NumberFormat("Es-es", {
+                    style: "currency",
+                    currency: "EUR",
+                  }).format(entry.finalAmount - entry.initialAmount)}
                     
-                  </td>
-                  <td>
-                    <NoInputForm action="/api/entry" method="DELETE" client:load>
-                      <input
-                        id="entryid"
-                        type="hidden"
-                        name="entryid"
-                        value={entry.id}
-                      />
-                      <DeleteButton>X</DeleteButton>
-                    </NoInputForm>
-                  </td>
-                </tr>
-              ))
-            }
-          </table>
-        </div>
+                </td>
+                <td>
+                  <NoInputForm action="/api/entry" method="DELETE" client:load>
+                    <input
+                      id="entryid"
+                      type="hidden"
+                      name="entryid"
+                      value={entry.id}
+                    />
+                    <DeleteButton>X</DeleteButton>
+                  </NoInputForm>
+                </td>
+              </tr>
+            ))
+          }
+        </table>
         
         <div class="container-vertical">
           <BarChart label="Dinero total" data={totalChartData} id="total" client:load />
@@ -184,11 +183,6 @@ const savingsChartData = savingsChart(entries)
     align-items: start;
     justify-content: center;
     gap: var(--gap);
-  }
-  .table-container {
-    width: 100%;
-    border-radius: var(--rounded);
-    overflow: clip;
   }
 
   .table-container-horizontal {
