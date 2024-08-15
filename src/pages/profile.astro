@@ -37,15 +37,10 @@ const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
   <main>
     <Hero id="user-info">
       <article>
-        <h2>Información de usuario</h2>
-        <strong>Nombre</strong>
-        <p>{userData?.firstName}</p>
-        <strong>Apellidos</strong>
-        <p>{userData?.lastName}</p>
-        <strong>Email</strong>
-        <p>{userData?.email}</p>
-        <strong>Nombre de usuario</strong>
-        <p>{userData?.username}</p>
+        <label>Nombre <p>{userData?.firstName}</p></label>
+        <label>Apellidos <p>{userData?.lastName}</p></label>
+        <label>Email <p>{userData?.email}</p></label>
+        <label>Nombre de usuario <p>{userData?.username}</p></label>
       </article>
       <div>
         <Button
@@ -81,9 +76,9 @@ const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: var(--gap);
+    gap: var(--gap-large);
     justify-content: left;
-    padding: var(--padding);
+    padding: var(--padding-large);
     background-color: var(--gray-ultra-light);
     border-radius: var(--rounded);
   }
