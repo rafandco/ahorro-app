@@ -2,8 +2,46 @@ import type { APIRoute } from "astro"
 import { Argon2id } from "oslo/password"
 import { db, eq, ne, and, User, Entry, Session } from "astro:db"
 
-// TODO: Crear GET: APIRoute
+export const GET: APIRoute = async ({ locals }): Promise<Response> => {
+  // Almacenamos el usuario de la sesión actual
+  const user = locals.user
+  // Verificar si el usuario está autenticado
+  if (!user) {
+    return new Response(
+      JSON.stringify({
+        message: "No autorizado",
+      }),
+      { status: 401 }
+    )
+  }
 
+  // Buscar el usuario en la base de datos
+  const foundUser = (
+    await db.select().from(User).where(eq(User.id, user.id))
+  ).at(0)
+
+  // Si no se encuentra el usuario, devolver un error
+  if (!foundUser) {
+    return new Response(
+      JSON.stringify({
+        message: "Usuario no encontrado",
+      }),
+      { status: 404 }
+    )
+  }
+
+  // Devolver la información del usuario
+  return new Response(
+    JSON.stringify({
+      id: foundUser.id,
+      username: foundUser.username,
+      email: foundUser.email,
+      firstName: foundUser.firstName,
+      lastName: foundUser.lastName,
+    }),
+    { status: 200 }
+  )
+}
 export const PUT: APIRoute = async ({
   request,
   locals,

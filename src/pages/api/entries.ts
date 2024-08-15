@@ -2,7 +2,20 @@ import type { APIRoute } from "astro"
 import { db, Entry, eq } from "astro:db"
 import { generateId } from "lucia"
 
-// TODO: Crear GET:APIRoute
+export const GET: APIRoute = async ({ locals }): Promise<Response> => {
+  const user = locals.user
+  if (!user) {
+    return new Response(
+      JSON.stringify({
+        message: "No autorizado",
+      }),
+      { status: 401 }
+    )
+  }
+
+  const entries = await db.select().from(Entry).where(eq(Entry.userId, user.id))
+  return new Response(JSON.stringify({ data: entries }), { status: 200 })
+}
 
 export const POST: APIRoute = async ({
   request,

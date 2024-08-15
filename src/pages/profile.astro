@@ -4,7 +4,6 @@ import Button from "../components/atoms/Button.astro"
 import FormButton from "../components/atoms/FormButton.astro"
 import Layout from "../layouts/Layout.astro"
 import HeaderSection from "../components/organisms/HeaderSection.astro"
-import Section from "../components/organisms/Section.astro"
 import Hero from "../components/organisms/Hero.astro"
 // Almacenamos el usuario de la sesión actual
 const user = Astro.locals.user
@@ -13,6 +12,8 @@ const user = Astro.locals.user
 if (!user) {
   return Astro.redirect("/singup")
 }
+
+console.log(user)
 
 // Obtenemos datos del usuario
 const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
