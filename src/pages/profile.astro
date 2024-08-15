@@ -24,7 +24,7 @@ const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
   <header>
     <HeaderSection id="header">
       <h1>Perfil</h1>
-      <form action="/api/singout" method="post">
+      <form action="/api/auth/singout" method="post">
         <FormButton
           type="submit"
           color="var(--black)"

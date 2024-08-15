@@ -1,4 +1,4 @@
-import { lucia } from "../../auth"
+import { lucia } from "../../../auth"
 import type { APIRoute } from "astro"
 
 export const POST: APIRoute = async ({

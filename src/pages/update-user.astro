@@ -24,7 +24,7 @@ const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
   <main>
     <Hero id="update-user-form">
       <h1>Editar perfil</h1>
-      <Form action="/api/user" method="PUT" client:load>
+      <Form action="/api/users" method="PUT" client:load>
         <Input
           type="text"
           id="firstname"

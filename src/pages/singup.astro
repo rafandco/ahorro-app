@@ -10,7 +10,7 @@ import Layout from "../layouts/Layout.astro"
   <main>
     <Hero id="singup-form">
       <h1>Registrarse</h1>
-      <Form action="/api/singup" method="POST" client:load>
+      <Form action="/api/auth/singup" method="POST" client:load>
         <Input
           type="text"
           id="firstname"

@@ -1,7 +1,7 @@
 import { generateId } from "lucia"
 import { Argon2id } from "oslo/password"
 import { db, eq, User } from "astro:db"
-import { lucia } from "../../auth"
+import { lucia } from "../../../auth"
 import type { APIRoute } from "astro"
 
 export const POST: APIRoute = async ({
