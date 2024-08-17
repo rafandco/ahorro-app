@@ -6,37 +6,11 @@ import Hero from "../components/organisms/Hero.astro"
 import Layout from "../layouts/Layout.astro"
 ---
 
-<Layout title="Registro">
+<Layout title="Iniciar sesión">
   <main>
-    <Hero id="singup-form">
-      <h1>Registrarse</h1>
-      <Form action="/api/auth/singup" method="POST" client:load>
-        <Input
-          type="text"
-          id="firstname"
-          name="firstname"
-          label="Nombre"
-          placeholder="Fernando..."
-          required={true}
-          minlength={2}
-        />
-        <Input
-          type="text"
-          id="lastname"
-          name="lastname"
-          label="Apellidos"
-          placeholder="García Rodríguez..."
-          required={true}
-          minlength={2}
-        />
-        <Input
-          type="email"
-          id="email"
-          name="email"
-          label="Correo electrónico"
-          placeholder="fernando@gmail.com"
-          required={true}
-        />
+    <Hero id="singin-form">
+      <h1>Iniciar sesión</h1>
+      <Form action="/api/auth/signin" method="POST" client:load>
         <Input
           type="text"
           id="username"
@@ -59,7 +33,7 @@ import Layout from "../layouts/Layout.astro"
           bgColor="var(--dark-spring-green)"
           bgColorHover="var(--dark-spring-green-light)"
         >
-          Registrarse
+          Iniciar sesión
         </FormButton>
       </Form>
     </Hero>

@@ -12,8 +12,16 @@ export const GET: APIRoute = async ({ locals }): Promise<Response> => {
       { status: 401 }
     )
   }
-
   const entries = await db.select().from(Entry).where(eq(Entry.userId, user.id))
+  if (!entries) {
+    return new Response(
+      JSON.stringify({
+        message: "No se encontraron entradas",
+      }),
+      { status: 404 }
+    )
+  }
+
   return new Response(JSON.stringify({ data: entries }), { status: 200 })
 }
 

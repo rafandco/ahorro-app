@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import FormButton from "../atoms/FormButton.astro"
 
 interface Props {
   action: string

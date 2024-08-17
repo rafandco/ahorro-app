@@ -10,67 +10,132 @@ import NoInputForm from "../components/molecules/NoInputForm.vue"
 import BarChart from "../components/molecules/BarChart.vue"
 import Button from "../components/atoms/Button.astro"
 
-// Almacenamos el usuario de la sesión actual
-const user = Astro.locals.user
 
-// En caso de no existir usuario autenticado, redireccionamos a la página de registro
-if (!user) {
-  return Astro.redirect("/singup")
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
 }
 
-// Obtenemos datos del usuario
-const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
-  0
-)
+interface Entry {
+  id: string;
+  initialAmount: number;
+  finalAmount: number;
+  createdAt: Date;
+  userId: string;
 
+}
+
+const user = Astro.locals.user 
+
+// Redireccionamos si el usuario no está autenticado
+if (!user) {
+  return Astro.redirect("/signup")
+}
+
+/*
+// <<<<<<<<<<<<<<<<<<<<<<<<< USANDO FETCH (Redundate) >>>>>>>>>>>>>>>>>>>>>>>>>
+// No tiene sentido usar fetch si nuestro sistema tiene acceso a la base de datos 
+
+// Recuperamos la cookie para enviarla en las peticiones GET a la API
+const cookieHeader = Astro.cookies.get("auth_session")?.value as string
+
+// Función para obtener datos de usuario
+const getUserData = async () => {
+  const response = await fetch(new URL("/api/users", Astro.url),{
+    method: "GET",
+    headers: {
+      "Cookie": "auth_session="+cookieHeader // Envía la cookie 
+    }
+  })
+  if (!response.ok) {
+    return Astro.redirect("/signup")
+  }
+  return await response.json()
+
+}
+
+// Función para obtener entradas del usuario
+const getEntries = async () => {
+  const response = await fetch(new URL("/api/entries", Astro.url) ,{
+    method: "GET",
+    headers: {
+      "Cookie": "auth_session="+cookieHeader // Envía la cookie 
+    }
+  })
+  if (!response.ok) {
+    console.error("Error al obtener las entradas")
+    return {data: []}
+  }
+  //Deserializamos la respuesta
+  const json = await response.json()
+  const entries: Entry[] = json.data.map((entry: any) => ({
+    id: parseInt(entry.id, 10), 
+    initialAmount: parseFloat(entry.initialAmount), 
+    finalAmount: parseFloat(entry.finalAmount),  
+    createdAt: new Date(entry.createdAt), 
+    userId: entry.userId
+  }))
+  return { data: entries }
+}
+
+const userData = await getUserData()
+const entries = await getEntries().then(entry => entry.data)
+
+// <<<<<<<<<<<<<<<<<<<<<<<<< USANDO FETCH (Redundate) >>>>>>>>>>>>>>>>>>>>>>>>>
+*/
+
+// <<<<<<<<<<<<<<<<<<<<<<<<< USANDO BASE DE DATOS >>>>>>>>>>>>>>>>>>>>>>>>>
+// Usar llamadas a la BBDD es mejor opción ya que se evita latencia en un sistema monolítico (usaremos este enfoque en el resto del código)
+// Obtenemos datos del usuario
+const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(0)
 //Obtenemos las entradas del usuario
 const entries = await db.select().from(Entry).where(eq(Entry.userId, user.id))
+// <<<<<<<<<<<<<<<<<<<<<<<<< USANDO BASE DE DATOS >>>>>>>>>>>>>>>>>>>>>>>>>
 
-//Función de media de ahorro
-const averageSavings = (entries: any) => {
-  let i
-  let element = 0.0
-  for (i = 0; i < entries.length; i++) {
-    const savings = entries[i].finalAmount - entries[i].initialAmount
-    element = element + savings
-  }
-  return element / i
+// Función de media de ahorro
+const averageSavings = (entries: Entry[]): number => {
+  if (entries.length === 0) return 0
+  let totalSavings = 0.0
+  entries.forEach(entry => {
+    totalSavings += entry.finalAmount - entry.initialAmount
+  })
+  return totalSavings / entries.length
 }
 
-//Función de media de ahorro
-const totalSavings = (entries: any) => {
-  let i
-  let element = 0.0
-  for (i = 0; i < entries.length; i++) {
-    const savings = entries[i].finalAmount - entries[i].initialAmount
-    element = element + savings
-  }
-  return element
+// Función de ahorro total
+const totalSavings = (entries: Entry[]): number => {
+  let total = 0.0
+  entries.forEach(entry => {
+    total += entry.finalAmount - entry.initialAmount
+  })
+  return total
 }
 
 // Recopilamos los datos para los gráficos
-const totalChart = (entries: any): { label: string; value: number }[] => {
-  return entries.map((entry: any) => ({
-    label: entry.createdAt.toLocaleDateString("Es-es"),
+const totalChart = (entries: Entry[]): { label: string; value: number }[] => {
+  return entries.map(entry => ({
+    label: entry.createdAt.toLocaleDateString("es-ES"),
     value: entry.finalAmount,
   }))
 }
-const totalChartData = totalChart(entries)
 
-const savingsChart = (entries: any): { label: string; value: number }[] => {
-  return entries.map((entry: any) => ({
-    label: entry.createdAt.toLocaleDateString("Es-es"),
+const savingsChart = (entries: Entry[]): { label: string; value: number }[] => {
+  return entries.map(entry => ({
+    label: entry.createdAt.toLocaleDateString("es-ES"),
     value: entry.finalAmount - entry.initialAmount,
   }))
 }
-const savingsChartData = savingsChart(entries)
 
+const totalChartData = totalChart(entries)
+const savingsChartData = savingsChart(entries);
 ---
-
 <Layout title="Dashboard">
   <header>
     <HeaderSection id="header">
-      <h1>{"Hola, " + userData?.firstName}</h1>
+      <h1>{"Hola, " + (userData as User).firstName}</h1>
       <Button href="/profile" color="var(--black)" bgColor="var(--gray-light)" bgColorHover="var(--gray-medium)">Perfil</Button>
     </HeaderSection>
   </header>

@@ -11,7 +11,7 @@ const user = Astro.locals.user
 
 // En caso de no existir usuario autenticado, redireccionamos a la página de registro
 if (!user) {
-  return Astro.redirect("/singup")
+  return Astro.redirect("/signup")
 }
 
 // Obtenemos entradas para sugerir la cantidad inicial

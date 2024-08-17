@@ -7,6 +7,7 @@ export const GET: APIRoute = async ({ locals }): Promise<Response> => {
   const user = locals.user
   // Verificar si el usuario está autenticado
   if (!user) {
+    console.log("No autorizado")
     return new Response(
       JSON.stringify({
         message: "No autorizado",
@@ -15,7 +16,6 @@ export const GET: APIRoute = async ({ locals }): Promise<Response> => {
     )
   }
 
-  // Buscar el usuario en la base de datos
   const foundUser = (
     await db.select().from(User).where(eq(User.id, user.id))
   ).at(0)
