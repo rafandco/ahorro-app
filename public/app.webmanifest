@@ -5,12 +5,12 @@
   "start_url": "/",
   "icons": [
     {
-      "src": "public/appicon512.png",
+      "src": "appicon512.png",
       "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "public/appicon1024.png",
+      "src": "appicon1024.png",
       "type": "image/png",
       "sizes": "1024x1024"
     }
