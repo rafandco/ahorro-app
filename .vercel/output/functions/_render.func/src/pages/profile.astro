@@ -1,0 +1,100 @@
+---
+import { db, eq, User } from "astro:db"
+import Button from "../components/atoms/Button.astro"
+import FormButton from "../components/atoms/FormButton.astro"
+import Layout from "../layouts/Layout.astro"
+import HeaderSection from "../components/organisms/HeaderSection.astro"
+import Hero from "../components/organisms/Hero.astro"
+// Almacenamos el usuario de la sesión actual
+const user = Astro.locals.user
+
+// En caso de no existir usuario autenticado, redireccionamos a la página de registro
+if (!user) {
+  return Astro.redirect("/signup")
+}
+
+console.log(user)
+
+// Obtenemos datos del usuario
+const userData = (await db.select().from(User).where(eq(User.id, user.id))).at(
+  0
+)
+---
+
+<Layout title="Perfil">
+  <header>
+    <HeaderSection id="header">
+      <h1>Perfil</h1>
+      <form action="/api/auth/signout" method="post">
+        <FormButton
+          type="submit"
+          color="var(--black)"
+          bgColor="var(--gray-light)"
+          bgColorHover="var(--gray-medium)">Cerrar sesión</FormButton
+        >
+      </form>
+    </HeaderSection>
+  </header>
+  <main>
+    <Hero id="user-info">
+      <article>
+        <label>Nombre <p>{userData?.firstName}</p></label>
+        <label>Apellidos <p>{userData?.lastName}</p></label>
+        <label>Email <p>{userData?.email}</p></label>
+        <label>Nombre de usuario <p>{userData?.username}</p></label>
+      </article>
+      <div>
+        <Button
+          href="/update-user"
+          color="var(--white)"
+          bgColor="var(--dark-spring-green)"
+          bgColorHover="var(--dark-spring-green-light)"
+        >
+          Editar perfil
+        </Button>
+        <Button
+          href="/change-password"
+          color="var(--white)"
+          bgColor="var(--dark-spring-green)"
+          bgColorHover="var(--dark-spring-green-light)"
+        >
+          Cambiar contraseña
+        </Button>
+        <Button
+          href="/delete-user"
+          color="var(--white)"
+          bgColor="var(--poppy)"
+          bgColorHover="var(--poppy-light)"
+        >
+          Eliminar cuenta
+        </Button>
+      </div>
+    </Hero>
+  </main>
+</Layout>
+<style>
+  article {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-large);
+    justify-content: left;
+    padding: var(--padding-large);
+    background-color: var(--gray-ultra-light);
+    border-radius: var(--rounded);
+  }
+
+  div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap);
+    justify-content: center;
+  }
+  @media (max-width: 768px) {
+    div {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>
