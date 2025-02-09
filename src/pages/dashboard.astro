@@ -32,7 +32,7 @@ const user = Astro.locals.user
 
 // Redireccionamos si el usuario no está autenticado
 if (!user) {
-  return Astro.redirect("/signup")
+  return Astro.redirect("/")
 }
 
 /*
