@@ -12,6 +12,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const { session, user } = await lucia.validateSession(sessionId)
   if (session && session.fresh) {
     const sessionCookie = lucia.createSessionCookie(session.id)
+    const expirationDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    sessionCookie.attributes.expires = expirationDate
     context.cookies.set(
       sessionCookie.name,
       sessionCookie.value,
