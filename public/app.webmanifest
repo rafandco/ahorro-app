@@ -2,7 +2,7 @@
   "name": "Ahorro App",
   "display": "standalone",
   "short_name": "Ahorro",
-  "start_url": "/",
+  "start_url": "/dashboard",
   "icons": [
     {
       "src": "appicon512.png",
